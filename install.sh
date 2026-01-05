@@ -5,3 +5,5 @@ ln -sf "$DOTFILES_DIR/zshrc" ~/.zshrc
 
 mkdir -p ~/.config/kitty
 ln -sf "$DOTFILES_DIR/config/kitty/kitty.conf" ~/.config/kitty/kitty.conf
+
+"$DOTFILES_DIR/install-zsh-plugins.sh"
