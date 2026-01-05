@@ -3,10 +3,7 @@
 if [ -d "$HOME/.oh-my-zsh" ]; then
     ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 elif [ -d /usr/share/oh-my-zsh ]; then
-    ZSH_CUSTOM="$HOME/.oh-my-zsh-custom"
-    mkdir -p "$ZSH_CUSTOM/plugins" "$ZSH_CUSTOM/themes"
-    echo "Using custom directory: $ZSH_CUSTOM"
-    echo "Add 'export ZSH_CUSTOM=\"$ZSH_CUSTOM\"' to your zshrc before sourcing oh-my-zsh"
+    ZSH_CUSTOM="/usr/share/oh-my-zsh/custom"
 else
     echo "oh-my-zsh not found"
     exit 1
