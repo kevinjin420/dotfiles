@@ -1,7 +1,9 @@
 #!/bin/bash
 
-if [ -d "$HOME/.oh-my-zsh" ]; then
-    ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+USER_HOME=$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)
+
+if [ -d "$USER_HOME/.oh-my-zsh" ]; then
+    ZSH_CUSTOM="$USER_HOME/.oh-my-zsh/custom"
 elif [ -d /usr/share/oh-my-zsh ]; then
     ZSH_CUSTOM="/usr/share/oh-my-zsh/custom"
 else
