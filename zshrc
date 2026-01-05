@@ -108,37 +108,42 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # pnpm
-export PNPM_HOME="/home/kevinjin/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
 
-alias mrover="cd ~/ros2_ws/src/mrover && source ~/ros2_ws/src/mrover/venv/bin/activate && source ../../install/Debug/setup.zsh"
+if [ -d ~/ros2_ws/src/mrover ]; then
+    alias mrover="cd ~/ros2_ws/src/mrover && source ~/ros2_ws/src/mrover/venv/bin/activate && source ../../install/Debug/setup.zsh"
+    export ROS_DOMAIN_ID=5
+fi
 
-export ROS_DOMAIN_ID=5
-
-export PATH=$PATH:~/intelFPGA/20.1/modelsim_ase/bin/
+[ -d ~/intelFPGA/20.1/modelsim_ase/bin ] && export PATH=$PATH:~/intelFPGA/20.1/modelsim_ase/bin/
 
 
-readonly ROS2_WS_PATH=~/ros2_ws
-source /opt/ros/humble/setup.zsh
-readonly CATKIN_SETUP_PATH=${ROS2_WS_PATH}/install/setup.zsh
-if [ -f ${CATKIN_SETUP_PATH} ]; then
-    source ${CATKIN_SETUP_PATH}
+if [ -f /opt/ros/humble/setup.zsh ]; then
+    readonly ROS2_WS_PATH=~/ros2_ws
+    source /opt/ros/humble/setup.zsh
+    readonly CATKIN_SETUP_PATH=${ROS2_WS_PATH}/install/setup.zsh
+    if [ -f ${CATKIN_SETUP_PATH} ]; then
+        source ${CATKIN_SETUP_PATH}
+    fi
 fi
 
 # bun completions
-[ -s "/home/mrover/.bun/_bun" ] && source "/home/mrover/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # ros2 completions
-eval "$(register-python-argcomplete3 ros2)"
-eval "$(register-python-argcomplete3 colcon)"
+if command -v register-python-argcomplete3 &> /dev/null; then
+    eval "$(register-python-argcomplete3 ros2)"
+    eval "$(register-python-argcomplete3 colcon)"
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -149,4 +154,4 @@ export NVM_DIR="$HOME/.nvm"
 
 # pnpm end
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="/usr/local/texlive/2025/bin/x86_64-linux:$PATH"
+[ -d /usr/local/texlive/2025/bin/x86_64-linux ] && export PATH="/usr/local/texlive/2025/bin/x86_64-linux:$PATH"
