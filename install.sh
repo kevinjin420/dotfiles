@@ -1,5 +1,8 @@
 #!/bin/bash
-DOTFILES_DIR="$HOME/dotfiles"
+
+
+USER_HOME=$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)
+DOTFILES_DIR="$USER_HOME/dotfiles"
 
 ln -sf "$DOTFILES_DIR/zshrc" ~/.zshrc
 
