@@ -118,6 +118,21 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/kevinjin/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/kevinjin/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/kevinjin/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/kevinjin/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
 
 if [ -d ~/ros2_ws/src/mrover ]; then
     alias mrover="cd ~/ros2_ws/src/mrover && source ~/ros2_ws/src/mrover/venv/bin/activate && source ../../install/Debug/setup.zsh"
@@ -128,9 +143,9 @@ fi
 
 
 if [ -f /opt/ros/humble/setup.zsh ]; then
-    readonly ROS2_WS_PATH=~/ros2_ws
+    ROS2_WS_PATH=~/ros2_ws
     source /opt/ros/humble/setup.zsh
-    readonly CATKIN_SETUP_PATH=${ROS2_WS_PATH}/install/setup.zsh
+    CATKIN_SETUP_PATH=${ROS2_WS_PATH}/install/setup.zsh
     if [ -f ${CATKIN_SETUP_PATH} ]; then
         source ${CATKIN_SETUP_PATH}
     fi
