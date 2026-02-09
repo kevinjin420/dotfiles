@@ -50,7 +50,7 @@ conda() {
 # lazy-load nvm
 export NVM_DIR="$HOME/.nvm"
 _load_nvm() {
-    unset -f _load_nvm nvm node npm npx
+    unset -f _load_nvm nvm node npm npx gemini
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 }
@@ -58,6 +58,7 @@ nvm() { _load_nvm; nvm "$@"; }
 node() { _load_nvm; node "$@"; }
 npm() { _load_nvm; npm "$@"; }
 npx() { _load_nvm; npx "$@"; }
+gemini() { _load_nvm; gemini "$@"; }
 
 # lazy-load ROS2
 if [ -d ~/ros2_ws/src/mrover ]; then
@@ -78,3 +79,6 @@ ros_env() {
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# opencode
+export PATH=/home/kevinjin/.opencode/bin:$PATH
