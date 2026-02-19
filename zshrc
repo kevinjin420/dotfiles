@@ -5,6 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+alias ts="tailscale"
+alias vpnon="sudo tailscale up --exit-node=t480-cachy"
+alias vpnoff="sudo tailscale down"
+
 # Exports & PATH
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
@@ -63,6 +67,8 @@ gemini() { _load_nvm; gemini "$@"; }
 # lazy-load ROS2
 if [ -d ~/ros2_ws/src/mrover ]; then
     alias mrover="cd ~/ros2_ws/src/mrover && source ~/ros2_ws/src/mrover/venv/bin/activate && source ../../install/Debug/setup.zsh"
+    alias base="ros2 launch mrover basestation.launch.py mode:=dev"
+    alias sim="ros2 launch mrover simulator.launch.py"
     export ROS_DOMAIN_ID=5
 fi
 ros_env() {
