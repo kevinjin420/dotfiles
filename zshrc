@@ -8,6 +8,8 @@ fi
 alias ts="tailscale"
 alias vpnon="sudo tailscale up --exit-node=t480-cachy"
 alias vpnoff="sudo tailscale down"
+alias tsup="sudo tailscale up --advertise-exit-node"
+alias tsdown="sudo tailscale down"
 
 # Exports & PATH
 export PNPM_HOME="$HOME/.local/share/pnpm"
