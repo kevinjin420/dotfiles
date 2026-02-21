@@ -51,18 +51,22 @@ conda() {
     conda "$@"
 }
 
-# lazy-load nvm
+# nvm: lazy-load for interactive shells, eager-load for non-interactive (scripts, Claude Code)
 export NVM_DIR="$HOME/.nvm"
-_load_nvm() {
-    unset -f _load_nvm nvm node npm npx gemini
+if [[ -o interactive ]]; then
+    _load_nvm() {
+        unset -f _load_nvm nvm node npm npx gemini
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    }
+    nvm() { _load_nvm; nvm "$@"; }
+    node() { _load_nvm; node "$@"; }
+    npm() { _load_nvm; npm "$@"; }
+    npx() { _load_nvm; npx "$@"; }
+    gemini() { _load_nvm; gemini "$@"; }
+else
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-}
-nvm() { _load_nvm; nvm "$@"; }
-node() { _load_nvm; node "$@"; }
-npm() { _load_nvm; npm "$@"; }
-npx() { _load_nvm; npx "$@"; }
-gemini() { _load_nvm; gemini "$@"; }
+fi
 
 # lazy-load ROS2
 if [ -d ~/ros2_ws/src/mrover ]; then
