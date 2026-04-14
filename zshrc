@@ -11,6 +11,8 @@ alias vpnoff="sudo tailscale down"
 alias tsup="sudo tailscale up --advertise-exit-node"
 alias tsdown="sudo tailscale down"
 
+alias s="kitten ssh"
+
 # Exports & PATH
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
@@ -92,5 +94,8 @@ ros_env() {
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# opencode
-export PATH=/home/kevinjin/.opencode/bin:$PATH
+# CubeCLT
+if [[ -d /opt/st/stm32cubeclt_1.21.0 ]]; then
+    export PATH="$PATH:/opt/st/stm32cubeclt_1.21.0/STM32CubeProgrammer/bin"
+    export PATH="$PATH:/opt/st/stm32cubeclt_1.21.0/GNU-tools-for-STM32/bin"
+fi

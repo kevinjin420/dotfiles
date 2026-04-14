@@ -1,0 +1,13 @@
+[user]
+	email = kevinjin0420@gmail.com
+	name = kevinjin420
+[init]
+	defaultBranch = main
+[credential]
+	helper = store
+[index]
+	skipHash = false
+[push]
+	autoSetupRemove = true
+[core]
+	editor = nvim

@@ -5,6 +5,7 @@ DOTFILES_DIR="$USER_HOME/dotfiles"
 
 ln -sf "$DOTFILES_DIR/zshrc" ~/.zshrc
 ln -sf "$DOTFILES_DIR/p10k.zsh" ~/.p10k.zsh
+ln -sf "$DOTFILES_DIR/gitconfig" ~/.gitconfig
 
 mkdir -p ~/.config/kitty
 ln -sf "$DOTFILES_DIR/config/kitty/kitty.conf" ~/.config/kitty/kitty.conf
