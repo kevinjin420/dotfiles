@@ -72,24 +72,12 @@ else
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 fi
 
-# lazy-load ROS2
+# MRover aliases (ROS_DOMAIN_ID, bun PATH, source_mrover_overlay are in ~/.zshenv)
 if [ -d ~/ros2_ws/src/mrover ]; then
-    alias mrover="cd ~/ros2_ws/src/mrover && source ~/ros2_ws/src/mrover/venv/bin/activate && source ../../install/Debug/setup.zsh"
+    alias mrover="cd ~/ros2_ws/src/mrover && source_mrover_overlay"
     alias base="ros2 launch mrover basestation.launch.py mode:=dev"
     alias sim="ros2 launch mrover simulator.launch.py"
-    export ROS_DOMAIN_ID=5
 fi
-ros_env() {
-    if [ -f /opt/ros/humble/setup.zsh ]; then
-        source /opt/ros/humble/setup.zsh
-        local ws_setup=~/ros2_ws/install/setup.zsh
-        [ -f "$ws_setup" ] && source "$ws_setup"
-    fi
-    if command -v register-python-argcomplete3 &>/dev/null; then
-        eval "$(register-python-argcomplete3 ros2)"
-        eval "$(register-python-argcomplete3 colcon)"
-    fi
-}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
