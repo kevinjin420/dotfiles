@@ -50,13 +50,7 @@ apply_kwin() {
 
 apply_kdeglobals() {
     kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.kde.breezedark.desktop
-    kwriteconfig6 --file kdeglobals --group KDE --key AnimationDurationFactor 0.25
-    kwriteconfig6 --file kdeglobals --group General --key ColorScheme AritimDark
-    kwriteconfig6 --file kdeglobals --group General --key BrowserApplication com.google.Chrome.desktop
-    kwriteconfig6 --file kdeglobals --group General --key TerminalService kitty.desktop
-
-    KITTY_BIN=$(command -v kitty 2>/dev/null || echo "$HOME/.local/kitty.app/bin/kitty")
-    kwriteconfig6 --file kdeglobals --group General --key TerminalApplication "$KITTY_BIN"
+    kwriteconfig6 --file kdegloobals --group General --key TerminalApplication "$KITTY_BIN"
 }
 
 apply_klassy() {
@@ -109,6 +103,9 @@ apply_breeze() {
 }
 
 apply_shortcuts() {
+    pkill -f kglobalacceld 2>/dev/null || true
+    sleep 0.5
+
     # Window management
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" "Meta+Up,Meta+PgUp,Maximize Window"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Quick Tile Left" "Meta+Left,Meta+Left,Quick Tile Window to the Left"
@@ -145,6 +142,8 @@ apply_shortcuts() {
 reload_kde() {
     qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
     kbuildsycoca6 --noincremental 2>/dev/null || true
+    nohup kglobalacceld > /dev/null 2>&1 &
+    disown
     nohup plasmashell --replace > /dev/null 2>&1 &
     disown
 }
