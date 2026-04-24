@@ -136,20 +136,6 @@ apply_shortcuts() {
     kwriteconfig6 --file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"
 }
 
-reload_kde() {
-    qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
-    kbuildsycoca6 --noincremental 2>/dev/null || true
-    nohup plasmashell --replace > /dev/null 2>&1 &
-    disown
-}
-
-wait_for_plasmashell() {
-    echo "Waiting for Plasma to restart..."
-    sleep 3
-    while ! pgrep -x plasmashell > /dev/null; do sleep 1; done
-    sleep 3
-}
-
 check_prerequisites
 setup_assets
 apply_kwin
@@ -160,8 +146,6 @@ apply_input
 apply_power
 apply_lockscreen
 apply_breeze
-reload_kde
-wait_for_plasmashell
 apply_shortcuts
 
-echo "Completed -- log out and back in to activate shortcuts"
+echo "Completed -- reboot to apply all settings"
