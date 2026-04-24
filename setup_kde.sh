@@ -103,9 +103,6 @@ apply_breeze() {
 }
 
 apply_shortcuts() {
-    pkill -f kglobalacceld 2>/dev/null || true
-    sleep 0.5
-
     # Window management
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" "Meta+Up,Meta+PgUp,Maximize Window"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Quick Tile Left" "Meta+Left,Meta+Left,Quick Tile Window to the Left"
@@ -137,9 +134,6 @@ apply_shortcuts() {
 
     # Kitty
     kwriteconfig6 --file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"
-
-    nohup kglobalacceld > /dev/null 2>&1 &
-    disown
 }
 
 reload_kde() {
@@ -170,4 +164,4 @@ reload_kde
 wait_for_plasmashell
 apply_shortcuts
 
-echo "Completed"
+echo "Completed -- log out and back in to activate shortcuts"
