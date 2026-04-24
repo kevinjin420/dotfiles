@@ -13,10 +13,18 @@ run_as_user() {
     sudo -u "$REAL_USER" "$@"
 }
 
-apt-get install -y software-properties-common
-add-apt-repository -y ppa:neovim-ppa/stable
-apt-get update -qq
-apt-get install -y neovim python3-neovim
+apt-get install -y software-properties-common neovim python3-neovim
+
+NVIM_VERSION=$(nvim --version 2>/dev/null | grep -oP '(?<=NVIM v)\d+\.\d+' | head -1)
+NVIM_MINOR=$(echo "$NVIM_VERSION" | cut -d. -f2)
+
+if [ -z "$NVIM_VERSION" ] || [ "${NVIM_MINOR:-0}" -lt 10 ]; then
+    echo "Default repo neovim too old ($NVIM_VERSION), trying PPA..."
+    add-apt-repository -y ppa:neovim-ppa/stable && \
+        apt-get update -qq && \
+        apt-get install -y neovim || \
+        echo "WARNING: PPA unavailable for this Ubuntu release -- neovim $NVIM_VERSION installed from default repos"
+fi
 
 # Backup existing config
 for dir in \
