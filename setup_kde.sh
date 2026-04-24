@@ -108,6 +108,40 @@ apply_breeze() {
     kwriteconfig6 --file breezerc --group Common --key ShadowStrength 128
 }
 
+apply_shortcuts() {
+    # Window management
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" "Meta+Up,Meta+PgUp,Maximize Window"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Quick Tile Left" "Meta+Left,Meta+Left,Quick Tile Window to the Left"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Quick Tile Right" "Meta+Right,Meta+Right,Quick Tile Window to the Right"
+
+    # Switch to desktop (Alt+1-0)
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 1" "Alt+1,Ctrl+F1,Switch to Desktop 1"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 2" "Alt+2,Ctrl+F2,Switch to Desktop 2"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 3" "Alt+3,Ctrl+F3,Switch to Desktop 3"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 4" "Alt+4,Ctrl+F4,Switch to Desktop 4"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 5" "Alt+5,,Switch to Desktop 5"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 6" "Alt+6,,Switch to Desktop 6"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 7" "Alt+7,,Switch to Desktop 7"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 8" "Alt+8,,Switch to Desktop 8"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 9" "Alt+9,,Switch to Desktop 9"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 10" "Alt+0,,Switch to Desktop 10"
+
+    # Move window to desktop (Alt+Shift+1-0)
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 1" "Alt+!,,Window to Desktop 1"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 2" "Alt+@,,Window to Desktop 2"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 3" "Alt+#,,Window to Desktop 3"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 4" "Alt+$,,Window to Desktop 4"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 5" "Alt+%,,Window to Desktop 5"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 6" "Alt+^,,Window to Desktop 6"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 7" "Alt+&,,Window to Desktop 7"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Alt+*,,Window to Desktop 8"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"
+
+    # Kitty
+    kwriteconfig6 --file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"
+}
+
 reload_kde() {
     qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
     kbuildsycoca6 --noincremental 2>/dev/null || true
@@ -125,6 +159,7 @@ apply_input
 apply_power
 apply_lockscreen
 apply_breeze
+apply_shortcuts
 reload_kde
 
 echo "Completed -- Plasma will restart momentarily"
