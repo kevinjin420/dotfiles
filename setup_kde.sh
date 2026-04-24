@@ -137,15 +137,23 @@ apply_shortcuts() {
 
     # Kitty
     kwriteconfig6 --file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"
+
+    nohup kglobalacceld > /dev/null 2>&1 &
+    disown
 }
 
 reload_kde() {
     qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
     kbuildsycoca6 --noincremental 2>/dev/null || true
-    nohup kglobalacceld > /dev/null 2>&1 &
-    disown
     nohup plasmashell --replace > /dev/null 2>&1 &
     disown
+}
+
+wait_for_plasmashell() {
+    echo "Waiting for Plasma to restart..."
+    sleep 3
+    while ! pgrep -x plasmashell > /dev/null; do sleep 1; done
+    sleep 3
 }
 
 check_prerequisites
@@ -158,7 +166,8 @@ apply_input
 apply_power
 apply_lockscreen
 apply_breeze
-apply_shortcuts
 reload_kde
+wait_for_plasmashell
+apply_shortcuts
 
-echo "Completed -- Plasma will restart momentarily"
+echo "Completed"
