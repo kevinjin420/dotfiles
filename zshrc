@@ -59,7 +59,7 @@ conda() {
 export NVM_DIR="$HOME/.nvm"
 if [[ -o interactive ]]; then
     _load_nvm() {
-        unset -f _load_nvm nvm node npm npx gemini
+        unset -f _load_nvm nvm node npm npx gemini codex
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     }
@@ -68,6 +68,7 @@ if [[ -o interactive ]]; then
     npm() { _load_nvm; npm "$@"; }
     npx() { _load_nvm; npx "$@"; }
     gemini() { _load_nvm; gemini "$@"; }
+    codex() { _load_nvm; codex "$@"; }
 else
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 fi
