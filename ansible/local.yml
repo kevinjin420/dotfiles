@@ -1,0 +1,81 @@
+- hosts: localhost
+  connection: local
+  vars:
+    dotfiles_dir: "{{ playbook_dir | dirname }}"
+    user_home: "{{ lookup('env', 'HOME') }}"
+  
+  tasks:
+    - name: Ensure basic utilities are installed
+      package:
+        name:
+          - zsh
+          - fzf
+          - git
+          - curl
+          - neovim
+          - python3
+        state: present
+      become: true
+
+    - name: Set zsh as default shell
+      user:
+        name: "{{ lookup('env', 'USER') }}"
+        shell: /usr/bin/zsh
+      become: true
+
+    - name: Install Oh-My-Zsh
+      git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: "{{ user_home }}/.oh-my-zsh"
+        depth: 1
+
+    - name: Install ZSH plugins and themes
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ user_home }}/.oh-my-zsh/custom/{{ item.type }}/{{ item.name }}"
+        depth: 1
+      loop:
+        - { name: 'zsh-autosuggestions', type: 'plugins', repo: 'https://github.com/zsh-users/zsh-autosuggestions' }
+        - { name: 'zsh-syntax-highlighting', type: 'plugins', repo: 'https://github.com/zsh-users/zsh-syntax-highlighting' }
+        - { name: 'powerlevel10k', type: 'themes', repo: 'https://github.com/romkatv/powerlevel10k' }
+
+    - name: Install Kitty
+      shell: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+      args:
+        creates: "{{ user_home }}/.local/kitty.app/bin/kitty"
+
+    - name: Setup Kitty symlinks
+      file:
+        src: "{{ user_home }}/.local/kitty.app/bin/{{ item }}"
+        dest: "{{ user_home }}/.local/bin/{{ item }}"
+        state: link
+      loop:
+        - kitty
+        - kitten
+
+    - name: Create required directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ user_home }}/.config/kitty"
+        - "{{ user_home }}/.local/share/applications"
+
+    - name: Setup LazyVim
+      git:
+        repo: https://github.com/LazyVim/starter
+        dest: "{{ user_home }}/.config/nvim"
+      args:
+        creates: "{{ user_home }}/.config/nvim/init.lua"
+
+    - name: Create symlinks for dotfiles
+      file:
+        src: "{{ dotfiles_dir }}/{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: yes
+      loop:
+        - { src: 'zshrc', dest: '.zshrc' }
+        - { src: 'p10k.zsh', dest: '.p10k.zsh' }
+        - { src: 'gitconfig', dest: '.gitconfig' }
+        - { src: 'config/kitty/kitty.conf', dest: '.config/kitty/kitty.conf' }

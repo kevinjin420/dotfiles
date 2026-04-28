@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euxo pipefail
 
 if [ "$EUID" -eq 0 ]; then
     echo "Do not run as root" >&2
@@ -103,12 +103,12 @@ apply_breeze() {
 }
 
 apply_shortcuts() {
-    # Window management
+    # Window Snap
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" "Meta+Up,Meta+PgUp,Maximize Window"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Quick Tile Left" "Meta+Left,Meta+Left,Quick Tile Window to the Left"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Quick Tile Right" "Meta+Right,Meta+Right,Quick Tile Window to the Right"
 
-    # Switch to desktop (Alt+1-0)
+    # Switch to desktop
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 1" "Alt+1,Ctrl+F1,Switch to Desktop 1"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 2" "Alt+2,Ctrl+F2,Switch to Desktop 2"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 3" "Alt+3,Ctrl+F3,Switch to Desktop 3"
@@ -120,7 +120,7 @@ apply_shortcuts() {
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 9" "Alt+9,,Switch to Desktop 9"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 10" "Alt+0,,Switch to Desktop 10"
 
-    # Move window to desktop (Alt+Shift+1-0)
+    # Move window to desktop
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 1" "Alt+!,,Window to Desktop 1"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 2" "Alt+@,,Window to Desktop 2"
     kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 3" "Alt+#,,Window to Desktop 3"
@@ -148,4 +148,4 @@ apply_lockscreen
 apply_breeze
 apply_shortcuts
 
-echo "Completed -- reboot to apply all settings"
+echo "Completed -- reboot NOW to apply all settings"
