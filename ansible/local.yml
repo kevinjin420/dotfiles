@@ -14,8 +14,9 @@
           - curl
           - neovim
           - python3
+          - cowsay
+          - sl
         state: present
-      become: true
 
     - name: Set zsh as default shell
       user:
