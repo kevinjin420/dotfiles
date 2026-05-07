@@ -1,28 +1,24 @@
 #!/bin/bash
 set -e
 
-if [ "$EUID" -ne 0 ]; then
-    echo "Run with sudo: sudo ./setup_zsh.sh"
-    exit 1
-fi
+sudo -v
 
-REAL_USER="${SUDO_USER:-$USER}"
-USER_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6)
+USER_HOME="$HOME"
 
 run_as_user() {
-    sudo -u "$REAL_USER" "$@"
+    "$@"
 }
 
 # Install zsh and fzf
-apt-get update -qq
-apt-get install -y zsh fzf
+sudo apt-get update -qq
+sudo apt-get install -y zsh fzf
 
 # Set zsh as default shell
 ZSH_BIN=$(which zsh)
 if ! grep -qxF "$ZSH_BIN" /etc/shells; then
-    echo "$ZSH_BIN" >> /etc/shells
+    echo "$ZSH_BIN" | sudo tee -a /etc/shells
 fi
-chsh -s "$ZSH_BIN" "$REAL_USER"
+sudo chsh -s "$ZSH_BIN" "$USER"
 
 # Install oh-my-zsh if not present
 if [ ! -d "$USER_HOME/.oh-my-zsh" ]; then
