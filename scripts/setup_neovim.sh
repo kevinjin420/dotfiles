@@ -3,12 +3,6 @@ set -e
 
 sudo -v
 
-USER_HOME="$HOME"
-
-run_as_user() {
-    "$@"
-}
-
 sudo apt-get install -y software-properties-common neovim python3-neovim
 
 NVIM_VERSION=$(nvim --version 2>/dev/null | grep -oP '(?<=NVIM v)\d+\.\d+' | head -1)
@@ -24,14 +18,14 @@ fi
 
 # Backup existing config
 for dir in \
-    "$USER_HOME/.config/nvim" \
-    "$USER_HOME/.local/share/nvim" \
-    "$USER_HOME/.local/state/nvim" \
-    "$USER_HOME/.cache/nvim"; do
-    [ -d "$dir" ] && run_as_user mv "$dir" "${dir}.bak_$(date +%s)"
+    "$HOME/.config/nvim" \
+    "$HOME/.local/share/nvim" \
+    "$HOME/.local/state/nvim" \
+    "$HOME/.cache/nvim"; do
+    [ -d "$dir" ] && mv "$dir" "${dir}.bak_$(date +%s)"
 done
 
-run_as_user git clone https://github.com/LazyVim/starter "$USER_HOME/.config/nvim"
-rm -rf "$USER_HOME/.config/nvim/.git"
+git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
+rm -rf "$HOME/.config/nvim/.git"
 
 echo "Completed -- run nvim to finish LazyVim plugin installation"

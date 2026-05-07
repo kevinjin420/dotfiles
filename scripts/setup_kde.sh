@@ -6,7 +6,7 @@ if [ "$EUID" -eq 0 ]; then
     exit 1
 fi
 
-DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+DOTFILES_DIR="$HOME/dotfiles"
 
 check_prerequisites() {
     if ! command -v kwriteconfig6 &>/dev/null; then

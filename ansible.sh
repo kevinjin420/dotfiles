@@ -12,5 +12,5 @@ fi
 
 sudo -v # Ensure Ansible has sudo permission
 
-readonly ROOT_PATH=$(dirname "$0")
-ansible-playbook -i "localhost," -c local "${ROOT_PATH}"/ansible/"$1"
+readonly ROOT_PATH="$HOME/dotfiles"
+ansible-playbook -i "localhost," -c local "${ROOT_PATH}/ansible/$1"
