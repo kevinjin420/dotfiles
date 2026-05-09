@@ -11,4 +11,4 @@ if [ "$#" -le 0 ]; then
 fi
 
 readonly ROOT_PATH="$HOME/dotfiles"
-ansible-playbook -i "localhost," -c local --ask-become-pass "${ROOT_PATH}/ansible/$1"
+ANSIBLE_CONFIG="${ROOT_PATH}/ansible/ansible.cfg" ansible-playbook -i "localhost," -c local --ask-become-pass "${ROOT_PATH}/ansible/$1"

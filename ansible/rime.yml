@@ -1,3 +1,5 @@
+# could just drop gtk support
+
 - hosts: localhost
   connection: local
   vars:
@@ -22,7 +24,7 @@
           - rime-prelude
         state: present
         update_cache: true
-      when: ansible_os_family == "Debian"
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Install fcitx5 Qt5 frontend (Debian/Ubuntu)
       become: true
@@ -30,8 +32,8 @@
         name: fcitx5-frontend-qt5
         state: present
       when:
-        - ansible_os_family == "Debian"
-        - "'libqt5core5a' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "Debian"
+        - "'libqt5core5a' in ansible_facts['packages']"
 
     - name: Install fcitx5 Qt6 frontend (Debian/Ubuntu)
       become: true
@@ -39,8 +41,8 @@
         name: fcitx5-frontend-qt6
         state: present
       when:
-        - ansible_os_family == "Debian"
-        - "'libqt6core6' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "Debian"
+        - "'libqt6core6' in ansible_facts['packages']"
 
     - name: Install fcitx5 GTK3 frontend (Debian/Ubuntu)
       become: true
@@ -48,8 +50,8 @@
         name: fcitx5-frontend-gtk3
         state: present
       when:
-        - ansible_os_family == "Debian"
-        - "'libgtk-3-0' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "Debian"
+        - "'libgtk-3-0' in ansible_facts['packages']"
 
     - name: Install fcitx5 GTK4 frontend (Debian/Ubuntu)
       become: true
@@ -57,8 +59,8 @@
         name: fcitx5-frontend-gtk4
         state: present
       when:
-        - ansible_os_family == "Debian"
-        - "'libgtk-4-1' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "Debian"
+        - "'libgtk-4-1' in ansible_facts['packages']"
 
     - name: Install fcitx5 and rime core (Arch)
       become: true
@@ -69,7 +71,7 @@
           - fcitx5-chinese-addons
           - rime-luna-pinyin
         state: present
-      when: ansible_os_family == "Archlinux"
+      when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Install fcitx5 Qt frontend (Arch)
       become: true
@@ -77,8 +79,8 @@
         name: fcitx5-qt
         state: present
       when:
-        - ansible_os_family == "Archlinux"
-        - "'qt5-base' in ansible_facts.packages or 'qt6-base' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "Archlinux"
+        - "'qt5-base' in ansible_facts['packages'] or 'qt6-base' in ansible_facts['packages']"
 
     - name: Install fcitx5 GTK frontend (Arch)
       become: true
@@ -86,8 +88,8 @@
         name: fcitx5-gtk
         state: present
       when:
-        - ansible_os_family == "Archlinux"
-        - "'gtk3' in ansible_facts.packages or 'gtk4' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "Archlinux"
+        - "'gtk3' in ansible_facts['packages'] or 'gtk4' in ansible_facts['packages']"
 
     - name: Install fcitx5 and rime core (Fedora/RHEL)
       become: true
@@ -97,7 +99,7 @@
           - fcitx5-rime
           - fcitx5-chinese-addons
         state: present
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
 
     - name: Install fcitx5 Qt frontend (Fedora/RHEL)
       become: true
@@ -105,8 +107,8 @@
         name: fcitx5-qt
         state: present
       when:
-        - ansible_os_family == "RedHat"
-        - "'qt5-qtbase' in ansible_facts.packages or 'qt6-qtbase' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "RedHat"
+        - "'qt5-qtbase' in ansible_facts['packages'] or 'qt6-qtbase' in ansible_facts['packages']"
 
     - name: Install fcitx5 GTK3 frontend (Fedora/RHEL)
       become: true
@@ -114,8 +116,8 @@
         name: fcitx5-gtk3
         state: present
       when:
-        - ansible_os_family == "RedHat"
-        - "'gtk3' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "RedHat"
+        - "'gtk3' in ansible_facts['packages']"
 
     - name: Install fcitx5 GTK4 frontend (Fedora/RHEL)
       become: true
@@ -123,8 +125,8 @@
         name: fcitx5-gtk4
         state: present
       when:
-        - ansible_os_family == "RedHat"
-        - "'gtk4' in ansible_facts.packages"
+        - ansible_facts['os_family'] == "RedHat"
+        - "'gtk4' in ansible_facts['packages']"
 
     - name: Create fcitx5 config directories
       file:
@@ -134,6 +136,7 @@
       loop:
         - "{{ user_home }}/.config/fcitx5/conf"
         - "{{ user_home }}/.local/share/fcitx5/rime"
+        - "{{ user_home }}/.config/environment.d"
 
     - name: Copy fcitx5 config files
       copy:
@@ -147,8 +150,18 @@
         - { src: "config/fcitx5/conf/rime.conf",                dest: ".config/fcitx5/conf/rime.conf" }
         - { src: "local/share/fcitx5/rime/default.custom.yaml", dest: ".local/share/fcitx5/rime/default.custom.yaml" }
 
-    # No-op on KDE Wayland (fcitx5 autostarts via KDE's mechanism).
-    # Required for X11 sessions and non-KDE desktops.
+    # basically for wechat lol (xwayland)
+    - name: Set fcitx5 IM environment variables for sandboxed/XWayland apps
+      copy:
+        src: "{{ dotfiles_dir }}/config/environment.d/fcitx5.conf"
+        dest: "{{ user_home }}/.config/environment.d/fcitx5.conf"
+        mode: "0644"
+
+    - name: Set fcitx5 as KDE Wayland virtual keyboard
+      command: kwriteconfig6 --file kwinrc --group Wayland --key InputMethod /usr/share/applications/fcitx5-wayland-launcher.desktop
+      changed_when: false
+
+    # for non-KDE/non-systemd X11 sessions
     - name: Write fcitx5 environment variables for X11 sessions
       copy:
         dest: "{{ user_home }}/.xprofile"
