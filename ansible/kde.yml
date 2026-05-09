@@ -108,6 +108,12 @@
         - '--file plasmashellrc --group PlasmaViews --group "Panel 2" --key panelOpacity 1'
         - '--file plasmashellrc --group PlasmaViews --group "Panel 2" --group Defaults --key thickness 44'
 
+    - name: Apply notification settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file plasmanotifyrc --group Notifications --key PopupPosition 1"
+
     - name: Apply input settings
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
