@@ -112,7 +112,7 @@
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
       loop:
-        - "--file plasmanotifyrc --group Notifications --key PopupPosition 1"
+        - "--file plasmanotifyrc --group Notifications --key PopupPosition TopRight"
 
     - name: Apply input settings
       shell: "kwriteconfig6 {{ item }}"
