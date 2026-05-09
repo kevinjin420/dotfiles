@@ -20,9 +20,11 @@
       when: ansible_facts['os_family'] == "Debian"
 
     - name: Install zsh and fzf (Arch)
-      ansible.builtin.shell: sudo pacman -S --noconfirm --needed zsh fzf
+      community.general.pacman:
+        name: [zsh, fzf]
+        state: present
+      become: true
       when: ansible_facts['os_family'] == "Archlinux"
-      changed_when: false
 
     - name: Install zsh and fzf (Fedora/RedHat)
       ansible.builtin.dnf:

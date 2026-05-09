@@ -10,7 +10,5 @@ if [ "$#" -le 0 ]; then
     exit 1
 fi
 
-sudo -v # Ensure Ansible has sudo permission
-
 readonly ROOT_PATH="$HOME/dotfiles"
-ansible-playbook -i "localhost," -c local "${ROOT_PATH}/ansible/$1"
+ansible-playbook -i "localhost," -c local --ask-become-pass "${ROOT_PATH}/ansible/$1"

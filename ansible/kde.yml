@@ -1,0 +1,177 @@
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+
+  vars:
+    dotfiles_dir: "{{ playbook_dir | dirname }}"
+    user_home: "{{ ansible_env.HOME }}"
+    kitty_bin: "{{ ansible_env.HOME }}/.local/kitty.app/bin/kitty"
+
+  pre_tasks:
+    - name: Fail if running as root
+      fail:
+        msg: "Do not run as root"
+      when: ansible_facts['user_id'] == "root"
+
+    - name: Check kwriteconfig6 is available
+      command: which kwriteconfig6
+      changed_when: false
+      failed_when: false
+      register: _kwriteconfig6
+    - fail:
+        msg: "kwriteconfig6 not found -- is KDE Plasma installed?"
+      when: _kwriteconfig6.rc != 0
+
+    - name: Check klassy decoration plugin is installed
+      shell: find /usr /usr/local -name '*klassy*' -name '*.so' 2>/dev/null | grep -q .
+      changed_when: false
+      register: _klassy_check
+      failed_when: _klassy_check.rc != 0
+
+  tasks:
+    - name: Create color-schemes directory
+      file:
+        path: "{{ user_home }}/.local/share/color-schemes"
+        state: directory
+
+    - name: Copy AritimDark color scheme
+      copy:
+        src: "{{ dotfiles_dir }}/kde/color-schemes/AritimDark.colors"
+        dest: "{{ user_home }}/.local/share/color-schemes/AritimDark.colors"
+
+    - name: Create wallpapers directory
+      file:
+        path: "{{ user_home }}/Documents/wallpapers"
+        state: directory
+
+    - name: Copy wallpapers (no overwrite)
+      copy:
+        src: "{{ item }}"
+        dest: "{{ user_home }}/Documents/wallpapers/"
+        force: false
+      with_fileglob:
+        - "{{ dotfiles_dir }}/wallpapers/*"
+
+    - name: Deploy plasma applets config
+      copy:
+        content: "{{ lookup('file', dotfiles_dir + '/kde/plasma-org.kde.plasma.desktop-appletsrc') | replace('/home/kevinjin/', user_home + '/') }}"
+        dest: "{{ user_home }}/.config/plasma-org.kde.plasma.desktop-appletsrc"
+
+    - name: Apply kwin settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file kwinrc --group Desktops --key Number 5"
+        - "--file kwinrc --group Desktops --key Rows 1"
+        - "--file kwinrc --group Windows --key RollOverDesktops false"
+        - "--file kwinrc --group Windows --key DelayFocusInterval 0"
+        - "--file kwinrc --group Tiling --key padding 4"
+        - "--file kwinrc --group org.kde.kdecoration2 --key library org.kde.klassy"
+        - "--file kwinrc --group org.kde.kdecoration2 --key theme Klassy"
+        - "--file kwinrc --group TabBox --key ActivitiesMode 0"
+        - "--file kwinrc --group TabBox --key HighlightWindows false"
+        - "--file kwinrc --group TabBox --key LayoutName compact"
+        - "--file kwinrc --group Plugins --key shakecursorEnabled false"
+        - "--file kwinrc --group Plugins --key slideEnabled false"
+        - "--file kwinrc --group Script-desktopchangeosd --key TextOnly true"
+        - "--file kwinrc --group Wayland --key EnablePrimarySelection false"
+
+    - name: Apply kdeglobals settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file kdeglobals --group KDE --key LookAndFeelPackage org.kde.breezedark.desktop"
+        - '--file kdeglobals --group General --key TerminalApplication "{{ kitty_bin }}"'
+
+    - name: Apply klassy settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file klassy/klassyrc --group Global --key LookAndFeelSet org.kde.breezedark.desktop"
+        - "--file klassy/klassyrc --group ShadowStyle --key ShadowStrength 128"
+        - "--file klassy/klassyrc --group Windeco --key AnimationsEnabled false"
+        - "--file klassy/klassyrc --group Windeco --key ButtonShape ShapeFullHeightRectangle"
+        - "--file klassy/klassyrc --group Windeco --key ColorizeThinWindowOutlineWithButton false"
+        - "--file klassy/klassyrc --group Windeco --key CornerRadius 0"
+        - "--file klassy/klassyrc --group Windeco --key UseTitleBarColorForAllBorders false"
+        - "--file klassy/klassyrc --group Windeco --key WindowCornerRadius 0"
+        - "--file klassy/klassyrc --group WindowOutlineStyle --key ThinWindowOutlineStyleActive WindowOutlineNone"
+        - "--file klassy/klassyrc --group WindowOutlineStyle --key ThinWindowOutlineStyleInactive WindowOutlineNone"
+
+    - name: Apply plasma settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file plasmarc --group Theme --key name klassy"
+        - '--file plasmashellrc --group PlasmaViews --group "Panel 2" --key floating 0'
+        - '--file plasmashellrc --group PlasmaViews --group "Panel 2" --key panelOpacity 1'
+        - '--file plasmashellrc --group PlasmaViews --group "Panel 2" --group Defaults --key thickness 44'
+
+    - name: Apply input settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file kcminputrc --group Keyboard --key RepeatDelay 200"
+        - "--file kcminputrc --group Keyboard --key RepeatRate 40"
+
+    - name: Apply power settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file powerdevilrc --group AC --group Display --key DimDisplayWhenIdle false"
+        - "--file powerdevilrc --group AC --group Display --key TurnOffDisplayWhenIdle false"
+        - "--file powerdevilrc --group AC --group Performance --key PowerProfile performance"
+        - "--file powerdevilrc --group AC --group SuspendAndShutdown --key AutoSuspendAction 0"
+        - "--file powerdevilrc --group Battery --group Display --key DimDisplayWhenIdle false"
+        - "--file powerdevilrc --group Battery --group Performance --key PowerProfile balanced"
+        - "--file powerdevilrc --group Battery --group SuspendAndShutdown --key AutoSuspendIdleTimeoutSec 900"
+        - "--file powerdevilrc --group BatteryManagement --key BatteryCriticalAction 1"
+        - "--file powerdevilrc --group LowBattery --group Performance --key PowerProfile power-saver"
+
+    - name: Apply lockscreen settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file kscreenlockerrc --group Daemon --key Timeout 30"
+        - '--file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "{{ user_home }}/Documents/wallpapers/firewatch.png"'
+
+    - name: Apply breeze settings
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - "--file breezerc --group Common --key OutlineIntensity OutlineOff"
+        - "--file breezerc --group Common --key ShadowStrength 128"
+
+    - name: Apply keyboard shortcuts
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - '--file kglobalshortcutsrc --group kwin --key "Window Maximize" "Meta+Up,Meta+PgUp,Maximize Window"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window Quick Tile Left" "Meta+Left,Meta+Left,Quick Tile Window to the Left"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window Quick Tile Right" "Meta+Right,Meta+Right,Quick Tile Window to the Right"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 1" "Alt+1,Ctrl+F1,Switch to Desktop 1"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 2" "Alt+2,Ctrl+F2,Switch to Desktop 2"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 3" "Alt+3,Ctrl+F3,Switch to Desktop 3"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 4" "Alt+4,Ctrl+F4,Switch to Desktop 4"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 5" "Alt+5,,Switch to Desktop 5"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 6" "Alt+6,,Switch to Desktop 6"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 7" "Alt+7,,Switch to Desktop 7"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 8" "Alt+8,,Switch to Desktop 8"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 9" "Alt+9,,Switch to Desktop 9"'
+        - '--file kglobalshortcutsrc --group kwin --key "Switch to Desktop 10" "Alt+0,,Switch to Desktop 10"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 1" "Alt+!,,Window to Desktop 1"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 2" "Alt+@,,Window to Desktop 2"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 3" "Alt+#,,Window to Desktop 3"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 4" "Alt+$,,Window to Desktop 4"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 5" "Alt+%,,Window to Desktop 5"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 6" "Alt+^,,Window to Desktop 6"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 7" "Alt+&,,Window to Desktop 7"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Alt+*,,Window to Desktop 8"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
+        - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
+        - '--file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"'
+
+    - name: Done
+      debug:
+        msg: "Completed -- reboot NOW to apply all settings"
