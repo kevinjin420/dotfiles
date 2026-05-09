@@ -6,9 +6,10 @@
 
   tasks:
     - name: Install zsh and fzf (macOS)
-      command: brew install zsh fzf
-      when: ansible_os_family == "Darwin"
-      changed_when: false
+      community.general.homebrew:
+        name: [zsh, fzf]
+        state: present
+      when: ansible_facts['os_family'] == "Darwin"
 
     - name: Install zsh and fzf (Debian/Ubuntu)
       ansible.builtin.apt:
@@ -16,20 +17,21 @@
         state: present
         update_cache: true
       become: true
-      when: ansible_os_family == "Debian"
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Install zsh and fzf (Arch)
-      command: pacman -S --noconfirm --needed zsh fzf
+      community.general.pacman:
+        name: [zsh, fzf]
+        state: present
       become: true
-      when: ansible_os_family == "Archlinux"
-      changed_when: false
+      when: ansible_facts['os_family'] == "Archlinux"
 
     - name: Install zsh and fzf (Fedora/RedHat)
       ansible.builtin.dnf:
         name: [zsh, fzf]
         state: present
       become: true
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
 
     - name: Resolve zsh binary path
       command: which zsh
@@ -42,7 +44,7 @@
         line: "{{ zsh_which.stdout }}"
         state: present
       become: true
-      when: ansible_os_family != "Darwin"
+      when: ansible_facts['os_family'] != "Darwin"
 
     - name: Set zsh as default shell
       user:
