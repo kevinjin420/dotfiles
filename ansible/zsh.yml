@@ -6,10 +6,9 @@
 
   tasks:
     - name: Install zsh and fzf (macOS)
-      community.general.homebrew:
-        name: [zsh, fzf]
-        state: present
+      command: brew install zsh fzf
       when: ansible_os_family == "Darwin"
+      changed_when: false
 
     - name: Install zsh and fzf (Linux)
       package:

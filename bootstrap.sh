@@ -35,8 +35,6 @@ if ! command -v ansible-playbook &>/dev/null; then
     fi
 fi
 
-ansible-galaxy collection install community.general --quiet
-
 # Clone dotfiles if not already present
 if [ ! -d "$DOTFILES_DIR/.git" ]; then
     echo -e "${BLUE}Cloning dotfiles...${NC}"
