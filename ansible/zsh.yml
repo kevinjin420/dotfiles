@@ -10,12 +10,26 @@
       when: ansible_os_family == "Darwin"
       changed_when: false
 
-    - name: Install zsh and fzf (Linux)
-      package:
+    - name: Install zsh and fzf (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name: [zsh, fzf]
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install zsh and fzf (Arch)
+      command: pacman -S --noconfirm --needed zsh fzf
+      become: true
+      when: ansible_os_family == "Archlinux"
+      changed_when: false
+
+    - name: Install zsh and fzf (Fedora/RedHat)
+      ansible.builtin.dnf:
         name: [zsh, fzf]
         state: present
       become: true
-      when: ansible_os_family != "Darwin"
+      when: ansible_os_family == "RedHat"
 
     - name: Resolve zsh binary path
       command: which zsh
