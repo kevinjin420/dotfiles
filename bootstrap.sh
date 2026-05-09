@@ -13,7 +13,13 @@ echo -e "${BLUE}Bootstrapping${NC}"
 
 # Install Ansible and git if not already present
 if ! command -v ansible-playbook &>/dev/null; then
-    if [ -f /etc/debian_version ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo -e "${GREEN}Detected macOS${NC}"
+        if ! command -v brew &>/dev/null; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
+        brew install ansible git
+    elif [ -f /etc/debian_version ]; then
         echo -e "${GREEN}Detected Debian/Ubuntu-based system${NC}"
         sudo apt update
         sudo apt install -y ansible git python3
@@ -28,6 +34,8 @@ if ! command -v ansible-playbook &>/dev/null; then
         exit 1
     fi
 fi
+
+ansible-galaxy collection install community.general --quiet
 
 # Clone dotfiles if not already present
 if [ ! -d "$DOTFILES_DIR/.git" ]; then
