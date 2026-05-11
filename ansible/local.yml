@@ -100,6 +100,12 @@
         kitty_installed.rc != 0 or
         kitty_latest.json.tag_name | regex_replace('^v', '') not in kitty_installed.stdout
 
+    - name: Ensure ~/.local/bin exists
+      file:
+        path: "{{ user_home }}/.local/bin"
+        state: directory
+        mode: '0755'
+
     - name: Setup Kitty symlinks
       file:
         src: "{{ kitty_bin_dir }}/{{ item }}"
