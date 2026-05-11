@@ -52,14 +52,18 @@
       become: true
       changed_when: false
 
+    - name: Check if Oh-My-Zsh is installed
+      stat:
+        path: "{{ user_home }}/.oh-my-zsh"
+      register: omz_dir
+
     - name: Install Oh-My-Zsh
       git:
         repo: https://github.com/ohmyzsh/ohmyzsh.git
         dest: "{{ user_home }}/.oh-my-zsh"
         depth: 1
         update: false
-      args:
-        creates: "{{ user_home }}/.oh-my-zsh"
+      when: not omz_dir.stat.exists
 
     - name: Install ZSH plugins and themes
       git:
@@ -111,6 +115,7 @@
         state: directory
       loop:
         - "{{ user_home }}/.config/kitty"
+        - "{{ user_home }}/.config/aerospace"
 
     - name: Create Linux application directories
       file:
@@ -171,3 +176,4 @@
         - { src: 'dots/p10k.zsh', dest: '.p10k.zsh' }
         - { src: 'dots/gitconfig', dest: '.gitconfig' }
         - { src: 'config/kitty/kitty.conf', dest: '.config/kitty/kitty.conf' }
+        - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
