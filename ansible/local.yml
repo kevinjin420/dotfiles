@@ -173,6 +173,26 @@
         dest: "{{ user_home }}/.config/nvim"
         update: false
 
+    - name: Install fonts (Linux)
+      copy:
+        src: "{{ item }}"
+        dest: "/usr/share/fonts/"
+      with_fileglob:
+        - "{{ dotfiles_dir }}/fonts/*.ttf"
+      become: true
+      when: ansible_facts['os_family'] != "Darwin"
+    - name: Rebuild font cache (Linux)
+      command: fc-cache -f
+      become: true
+      changed_when: false
+      when: ansible_facts['os_family'] != "Darwin"
+    - name: Install fonts (macOS)
+      copy:
+        src: "{{ item }}"
+        dest: "{{ user_home }}/Library/Fonts/"
+      with_fileglob:
+        - "{{ dotfiles_dir }}/fonts/*.ttf"
+      when: ansible_facts['os_family'] == "Darwin"
     - name: Create symlinks for dotfiles
       file:
         src: "{{ dotfiles_dir }}/{{ item.src }}"
@@ -183,4 +203,5 @@
         - { src: 'dots/zshrc', dest: '.zshrc' }
         - { src: 'dots/p10k.zsh', dest: '.p10k.zsh' }
         - { src: 'dots/gitconfig', dest: '.gitconfig' }
+        - { src: 'dots/always_forget.md', dest: 'always-forget.md' }
         - { src: 'config/kitty/kitty.conf', dest: '.config/kitty/kitty.conf' }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Helper script to run Ansible playbooks
-# from the mrover-ros2 codebase
+# ported from the mrover-ros2 codebase
 
 set -euo pipefail
 
