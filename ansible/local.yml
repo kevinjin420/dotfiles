@@ -3,48 +3,74 @@
   vars:
     dotfiles_dir: "{{ playbook_dir | dirname }}"
     user_home: "{{ lookup('env', 'HOME') }}"
+    zsh_custom: "{{ user_home }}/.oh-my-zsh/custom"
     kitty_bin_dir: "{{ user_home }}/.local/kitty.app/{{ 'Contents/MacOS' if ansible_facts['os_family'] == 'Darwin' else 'bin' }}"
-  
+
   tasks:
-    - name: Ensure basic utilities are installed
-      package:
-        name:
-          - zsh
-          - fzf
-          - git
-          - curl
-          - neovim
-          - python3
-          - cowsay
-          - sl
+    - name: Install base packages (macOS)
+      community.general.homebrew:
+        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
         state: present
+      when: ansible_facts['os_family'] == "Darwin"
+
+    - name: Install base packages (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install base packages (Arch)
+      community.general.pacman:
+        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Install base packages (Fedora/RedHat)
+      ansible.builtin.dnf:
+        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
 
     - name: Resolve zsh binary path
       command: which zsh
       register: zsh_which
       changed_when: false
 
-    - name: Set zsh as default shell
-      user:
-        name: "{{ lookup('env', 'USER') }}"
-        shell: "{{ zsh_which.stdout }}"
+    - name: Register zsh in /etc/shells
+      lineinfile:
+        path: /etc/shells
+        line: "{{ zsh_which.stdout }}"
+        state: present
       become: true
+
+    - name: Set zsh as default shell
+      command: chsh -s "{{ zsh_which.stdout }}" "{{ lookup('env', 'USER') }}"
+      become: true
+      changed_when: false
 
     - name: Install Oh-My-Zsh
       git:
         repo: https://github.com/ohmyzsh/ohmyzsh.git
         dest: "{{ user_home }}/.oh-my-zsh"
         depth: 1
+        update: false
+      args:
+        creates: "{{ user_home }}/.oh-my-zsh"
 
     - name: Install ZSH plugins and themes
       git:
         repo: "{{ item.repo }}"
-        dest: "{{ user_home }}/.oh-my-zsh/custom/{{ item.type }}/{{ item.name }}"
+        dest: "{{ zsh_custom }}/{{ item.type }}/{{ item.name }}"
         depth: 1
+        update: false
       loop:
-        - { name: 'zsh-autosuggestions', type: 'plugins', repo: 'https://github.com/zsh-users/zsh-autosuggestions' }
-        - { name: 'zsh-syntax-highlighting', type: 'plugins', repo: 'https://github.com/zsh-users/zsh-syntax-highlighting' }
-        - { name: 'powerlevel10k', type: 'themes', repo: 'https://github.com/romkatv/powerlevel10k' }
+        - { name: zsh-autosuggestions, type: plugins, repo: 'https://github.com/zsh-users/zsh-autosuggestions' }
+        - { name: zsh-syntax-highlighting, type: plugins, repo: 'https://github.com/zsh-users/zsh-syntax-highlighting' }
+        - { name: powerlevel10k, type: themes,  repo: 'https://github.com/romkatv/powerlevel10k' }
 
     - name: Get latest Kitty version
       uri:
