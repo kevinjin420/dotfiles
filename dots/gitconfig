@@ -8,6 +8,6 @@
 [index]
 	skipHash = false
 [push]
-	autoSetupRemove = true
+	autoSetupRemote = true
 [core]
 	editor = nvim
