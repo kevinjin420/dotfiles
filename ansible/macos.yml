@@ -3,6 +3,10 @@
   vars:
     dotfiles_dir: "{{ playbook_dir | dirname }}"
     user_home: "{{ lookup('env', 'HOME') }}"
+  vars_prompt:
+    - name: sudo_password
+      prompt: "Enter sudo password (required for karabiner-elements .pkg install)"
+      private: yes
 
   tasks:
     - name: Tap nikitabobko/tap for aerospace
@@ -10,10 +14,16 @@
         name: nikitabobko/tap
         state: present
 
-    - name: Install macOS cask packages
+    - name: Install aerospace (no sudo)
       community.general.homebrew_cask:
-        name: [nikitabobko/tap/aerospace, karabiner-elements]
+        name: nikitabobko/tap/aerospace
         state: present
+
+    - name: Install karabiner-elements (sudo)
+      community.general.homebrew_cask:
+        name: karabiner-elements
+        state: present
+        sudo_password: "{{ sudo_password }}"
 
     - name: Create required directories
       file:
