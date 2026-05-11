@@ -49,4 +49,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     ansible-playbook -i "localhost," -c local "$DOTFILES_DIR/ansible/macos.yml"
 fi
 
+if command -v kwriteconfig6 &>/dev/null; then
+    echo -e "${BLUE}Running KDE playbook...${NC}"
+    ansible-playbook -i "localhost," -c local "$DOTFILES_DIR/ansible/kde.yml"
+fi
+
 echo -e "${GREEN}Setup complete!${NC}"
