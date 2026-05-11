@@ -57,8 +57,15 @@
       failed_when: false
       changed_when: false
 
+    - name: Kitty version check
+      debug:
+        msg: >-
+          latest={{ kitty_latest.json.tag_name | regex_replace('^v', '') }}
+          installed={{ kitty_installed.stdout | default('not found') }}
+          action={{ 'will install/upgrade' if (kitty_installed.rc != 0 or kitty_latest.json.tag_name | regex_replace('^v', '') not in kitty_installed.stdout) else 'already up to date' }}
+
     - name: Install or upgrade Kitty
-      shell: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+      shell: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest={{ user_home }}/.local launch=n
       when: >
         kitty_installed.rc != 0 or
         kitty_latest.json.tag_name | regex_replace('^v', '') not in kitty_installed.stdout
@@ -125,8 +132,7 @@
       git:
         repo: https://github.com/LazyVim/starter
         dest: "{{ user_home }}/.config/nvim"
-      args:
-        creates: "{{ user_home }}/.config/nvim/init.lua"
+        update: false
 
     - name: Create symlinks for dotfiles
       file:
