@@ -5,9 +5,14 @@
     user_home: "{{ lookup('env', 'HOME') }}"
 
   tasks:
-    - name: Install macOS packages
-      community.general.homebrew:
-        name: [aerospace, karabiner-elements]
+    - name: Tap nikitabobko/tap for aerospace
+      community.general.homebrew_tap:
+        name: nikitabobko/tap
+        state: present
+
+    - name: Install macOS cask packages
+      community.general.homebrew_cask:
+        name: [nikitabobko/tap/aerospace, karabiner-elements]
         state: present
 
     - name: Create required directories
