@@ -18,10 +18,15 @@
           - sl
         state: present
 
+    - name: Resolve zsh binary path
+      command: which zsh
+      register: zsh_which
+      changed_when: false
+
     - name: Set zsh as default shell
       user:
         name: "{{ lookup('env', 'USER') }}"
-        shell: /usr/bin/zsh
+        shell: "{{ zsh_which.stdout }}"
       become: true
 
     - name: Install Oh-My-Zsh
@@ -60,7 +65,12 @@
         state: directory
       loop:
         - "{{ user_home }}/.config/kitty"
-        - "{{ user_home }}/.local/share/applications"
+
+    - name: Create Linux application directories
+      file:
+        path: "{{ user_home }}/.local/share/applications"
+        state: directory
+      when: ansible_facts['os_family'] != "Darwin"
 
     - name: Setup LazyVim
       git:

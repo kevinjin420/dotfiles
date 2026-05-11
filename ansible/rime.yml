@@ -137,6 +137,7 @@
         - "{{ user_home }}/.config/fcitx5/conf"
         - "{{ user_home }}/.local/share/fcitx5/rime"
         - "{{ user_home }}/.config/environment.d"
+      when: ansible_facts['os_family'] != "Darwin"
 
     - name: Copy fcitx5 config files
       copy:
@@ -149,6 +150,7 @@
         - { src: "config/fcitx5/profile",                       dest: ".config/fcitx5/profile" }
         - { src: "config/fcitx5/conf/rime.conf",                dest: ".config/fcitx5/conf/rime.conf" }
         - { src: "local/share/fcitx5/rime/default.custom.yaml", dest: ".local/share/fcitx5/rime/default.custom.yaml" }
+      when: ansible_facts['os_family'] != "Darwin"
 
     # basically for wechat lol (xwayland)
     - name: Set fcitx5 IM environment variables for sandboxed/XWayland apps
@@ -156,10 +158,12 @@
         src: "{{ dotfiles_dir }}/config/environment.d/fcitx5.conf"
         dest: "{{ user_home }}/.config/environment.d/fcitx5.conf"
         mode: "0644"
+      when: ansible_facts['os_family'] != "Darwin"
 
     - name: Set fcitx5 as KDE Wayland virtual keyboard
       command: kwriteconfig6 --file kwinrc --group Wayland --key InputMethod /usr/share/applications/fcitx5-wayland-launcher.desktop
       changed_when: false
+      when: ansible_facts['os_family'] != "Darwin"
 
     # for non-KDE/non-systemd X11 sessions
     - name: Write fcitx5 environment variables for X11 sessions
@@ -171,3 +175,4 @@
           export XMODIFIERS=@im=fcitx
         mode: "0644"
         force: false
+      when: ansible_facts['os_family'] != "Darwin"
