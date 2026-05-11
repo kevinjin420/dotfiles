@@ -45,10 +45,22 @@
         - { name: 'zsh-syntax-highlighting', type: 'plugins', repo: 'https://github.com/zsh-users/zsh-syntax-highlighting' }
         - { name: 'powerlevel10k', type: 'themes', repo: 'https://github.com/romkatv/powerlevel10k' }
 
-    - name: Install Kitty
+    - name: Get latest Kitty version
+      uri:
+        url: https://api.github.com/repos/kovidgoyal/kitty/releases/latest
+      register: kitty_latest
+
+    - name: Get installed Kitty version
+      command: "{{ user_home }}/.local/kitty.app/bin/kitty --version"
+      register: kitty_installed
+      failed_when: false
+      changed_when: false
+
+    - name: Install or upgrade Kitty
       shell: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-      args:
-        creates: "{{ user_home }}/.local/kitty.app/bin/kitty"
+      when: >
+        kitty_installed.rc != 0 or
+        kitty_latest.json.tag_name | regex_replace('^v', '') not in kitty_installed.stdout
 
     - name: Setup Kitty symlinks
       file:
@@ -70,6 +82,42 @@
       file:
         path: "{{ user_home }}/.local/share/applications"
         state: directory
+      when: ansible_facts['os_family'] != "Darwin"
+
+    - name: Install Kitty desktop files
+      copy:
+        src: "{{ user_home }}/.local/kitty.app/share/applications/{{ item }}"
+        dest: "{{ user_home }}/.local/share/applications/{{ item }}"
+        remote_src: true
+      loop:
+        - kitty.desktop
+        - kitty-open.desktop
+      when: ansible_facts['os_family'] != "Darwin"
+
+    - name: Patch Kitty desktop Icon path
+      replace:
+        path: "{{ user_home }}/.local/share/applications/{{ item }}"
+        regexp: '^Icon=kitty$'
+        replace: "Icon={{ user_home }}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png"
+      loop:
+        - kitty.desktop
+        - kitty-open.desktop
+      when: ansible_facts['os_family'] != "Darwin"
+
+    - name: Patch Kitty desktop Exec path
+      replace:
+        path: "{{ user_home }}/.local/share/applications/{{ item }}"
+        regexp: '^Exec=kitty'
+        replace: "Exec={{ user_home }}/.local/kitty.app/bin/kitty"
+      loop:
+        - kitty.desktop
+        - kitty-open.desktop
+      when: ansible_facts['os_family'] != "Darwin"
+
+    - name: Register kitty as default terminal
+      copy:
+        content: "kitty.desktop\n"
+        dest: "{{ user_home }}/.config/xdg-terminals.list"
       when: ansible_facts['os_family'] != "Darwin"
 
     - name: Setup LazyVim

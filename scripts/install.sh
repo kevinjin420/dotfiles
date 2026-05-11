@@ -7,9 +7,6 @@ ln -sf "$DOTFILES_DIR/dots/p10k.zsh"         "$HOME/.p10k.zsh"
 ln -sf "$DOTFILES_DIR/dots/gitconfig"        "$HOME/.gitconfig"
 ln -sf "$DOTFILES_DIR/dots/always_forget.md" "$HOME/always-forget.md"
 
-mkdir -p "$HOME/.config/kitty"
-ln -sf "$DOTFILES_DIR/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
-
 if [[ "$OSTYPE" != "darwin"* ]]; then
     mkdir -p "$HOME/.config/fcitx5/conf" "$HOME/.local/share/fcitx5/rime"
     for f in config profile; do
