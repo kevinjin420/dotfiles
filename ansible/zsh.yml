@@ -44,13 +44,11 @@
         line: "{{ zsh_which.stdout }}"
         state: present
       become: true
-      when: ansible_facts['os_family'] != "Darwin"
 
     - name: Set zsh as default shell
-      user:
-        name: "{{ lookup('env', 'USER') }}"
-        shell: "{{ zsh_which.stdout }}"
+      command: chsh -s "{{ zsh_which.stdout }}" "{{ lookup('env', 'USER') }}"
       become: true
+      changed_when: false
 
     - name: Install Oh-My-Zsh
       git:
@@ -58,6 +56,8 @@
         dest: "{{ user_home }}/.oh-my-zsh"
         depth: 1
         update: false
+      args:
+        creates: "{{ user_home }}/.oh-my-zsh"
 
     - name: Install ZSH plugins and themes
       git:
