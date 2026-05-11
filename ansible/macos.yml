@@ -1,0 +1,29 @@
+- hosts: localhost
+  connection: local
+  vars:
+    dotfiles_dir: "{{ playbook_dir | dirname }}"
+    user_home: "{{ lookup('env', 'HOME') }}"
+
+  tasks:
+    - name: Install macOS packages
+      community.general.homebrew:
+        name: [aerospace, karabiner-elements]
+        state: present
+
+    - name: Create required directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ user_home }}/.config/aerospace"
+        - "{{ user_home }}/.config/karabiner"
+
+    - name: Create symlinks for macOS dotfiles
+      file:
+        src: "{{ dotfiles_dir }}/{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: yes
+      loop:
+        - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
+        - { src: 'config/karabiner/karabiner.json', dest: '.config/karabiner/karabiner.json' }

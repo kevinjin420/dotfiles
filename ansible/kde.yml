@@ -40,19 +40,6 @@
         src: "{{ dotfiles_dir }}/kde/color-schemes/AritimDark.colors"
         dest: "{{ user_home }}/.local/share/color-schemes/AritimDark.colors"
 
-    - name: Create wallpapers directory
-      file:
-        path: "{{ user_home }}/Documents/wallpapers"
-        state: directory
-
-    - name: Copy wallpapers (no overwrite)
-      copy:
-        src: "{{ item }}"
-        dest: "{{ user_home }}/Documents/wallpapers/"
-        force: false
-      with_fileglob:
-        - "{{ dotfiles_dir }}/wallpapers/*"
-
     - name: Deploy plasma applets config
       copy:
         content: "{{ lookup('file', dotfiles_dir + '/kde/plasma-org.kde.plasma.desktop-appletsrc') | replace('/home/kevinjin/', user_home + '/') }}"

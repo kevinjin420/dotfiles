@@ -44,4 +44,9 @@ fi
 echo -e "${BLUE}Running Ansible playbook...${NC}"
 ansible-playbook -i "localhost," -c local "$DOTFILES_DIR/ansible/local.yml" --ask-become-pass
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo -e "${BLUE}Running macOS playbook...${NC}"
+    ansible-playbook -i "localhost," -c local "$DOTFILES_DIR/ansible/macos.yml"
+fi
+
 echo -e "${GREEN}Setup complete!${NC}"
