@@ -1,0 +1,23 @@
+on:
+  push:
+    branches: [main]
+    paths: [bootstrap.sh]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir out
+          cp bootstrap.sh out/index.html
+          echo "dotfiles.kevinjin.dev" > out/CNAME
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+      - uses: actions/deploy-pages@v4
