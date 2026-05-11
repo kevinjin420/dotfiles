@@ -115,8 +115,6 @@
         state: directory
       loop:
         - "{{ user_home }}/.config/kitty"
-        - "{{ user_home }}/.config/aerospace"
-        - "{{ user_home }}/.config/karabiner"
 
     - name: Create Linux application directories
       file:
@@ -177,5 +175,3 @@
         - { src: 'dots/p10k.zsh', dest: '.p10k.zsh' }
         - { src: 'dots/gitconfig', dest: '.gitconfig' }
         - { src: 'config/kitty/kitty.conf', dest: '.config/kitty/kitty.conf' }
-        - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
-        - { src: 'config/karabiner/karabiner.json', dest: '.config/karabiner/karabiner.json' }
