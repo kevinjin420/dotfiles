@@ -38,6 +38,12 @@
                             },
                             {
                                 "type": "basic",
+                                "from": { "key_code": "p", "modifiers": { "mandatory": ["left_control"] } },
+                                "to": [{ "key_code": "p", "modifiers": ["left_command"] }],
+                                "conditions": [{ "type": "frontmost_application_unless", "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$"] }]
+                            },
+                            {
+                                "type": "basic",
                                 "from": { "key_code": "s", "modifiers": { "mandatory": ["left_control"] } },
                                 "to": [{ "key_code": "s", "modifiers": ["left_command"] }],
                                 "conditions": [{ "type": "frontmost_application_unless", "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$"] }]
