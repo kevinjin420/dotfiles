@@ -33,6 +33,11 @@
         - "{{ user_home }}/.config/aerospace"
         - "{{ user_home }}/.config/karabiner"
 
+    - name: Install alt-tab
+      community.general.homebrew_cask:
+        name: alt-tab
+        state: present
+
     - name: Create symlinks for macOS dotfiles
       file:
         src: "{{ dotfiles_dir }}/{{ item.src }}"
@@ -42,3 +47,16 @@
       loop:
         - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
         - { src: 'config/karabiner/karabiner.json', dest: '.config/karabiner/karabiner.json' }
+
+    - name: Configure AltTab preferences
+      osx_defaults:
+        domain: com.lwouis.alt-tab-macos
+        key: "{{ item.key }}"
+        type: string
+        value: "{{ item.value }}"
+      loop:
+        - { key: 'appearanceStyle',        value: '2' }
+        - { key: 'appearanceTheme',        value: '2' }
+        - { key: 'previewFadeInAnimation', value: 'false' }
+        - { key: 'windowDisplayDelay',     value: '0' }
+        - { key: 'updatePolicy',           value: '1' }
