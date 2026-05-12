@@ -74,6 +74,12 @@
                             },
                             {
                                 "type": "basic",
+                                "from": { "key_code": "slash", "modifiers": { "mandatory": ["left_control"] } },
+                                "to": [{ "key_code": "slash", "modifiers": ["left_command"] }],
+                                "conditions": [{ "type": "frontmost_application_unless", "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$"] }]
+                            },
+                            {
+                                "type": "basic",
                                 "from": { "key_code": "q", "modifiers": { "mandatory": ["left_control"] } },
                                 "to": [{ "key_code": "q", "modifiers": ["left_command"] }],
                                 "conditions": [{ "type": "frontmost_application_unless", "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$"] }]
@@ -141,6 +147,16 @@
                                 "type": "basic",
                                 "from": { "key_code": "spacebar", "modifiers": { "mandatory": ["left_option"] } },
                                 "to": [{ "key_code": "spacebar", "modifiers": ["left_command"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "screenshot_shortcuts",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "s", "modifiers": { "mandatory": ["left_option", "left_shift"] } },
+                                "to": [{ "key_code": "4", "modifiers": ["left_command", "left_shift"] }]
                             }
                         ]
                     },
