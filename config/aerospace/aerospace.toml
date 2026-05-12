@@ -48,3 +48,15 @@ alt-enter = 'exec-and-forget open -na kitty'
 
 # Reload config
 alt-shift-semicolon = 'reload-config'
+
+# Enter resize mode
+alt-r = 'mode resize'
+
+[mode.resize.binding]
+h = 'resize width -50'
+l = 'resize width +50'
+k = 'resize height +50'
+j = 'resize height -50'
+alt-r = 'mode main'
+enter = 'mode main'
+esc = 'mode main'
