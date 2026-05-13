@@ -1,4 +1,4 @@
-start-at-login = true
+start-at-login = false
 
 [gaps]
 inner.horizontal = 0
