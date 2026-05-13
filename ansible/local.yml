@@ -123,6 +123,7 @@
         state: directory
       loop:
         - "{{ user_home }}/.config/kitty"
+        - "{{ user_home }}/.config/tmux"
         - "{{ user_home }}/Documents/wallpapers"
 
     - name: Copy wallpapers (no overwrite)
@@ -213,3 +214,4 @@
         - { src: 'dots/gitconfig', dest: '.gitconfig' }
         - { src: 'dots/always_forget.md', dest: 'always-forget.md' }
         - { src: 'config/kitty/kitty.conf', dest: '.config/kitty/kitty.conf' }
+        - { src: 'config/tmux/tmux.conf', dest: '.config/tmux/tmux.conf' }
