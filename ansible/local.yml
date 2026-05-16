@@ -4,7 +4,9 @@
     dotfiles_dir: "{{ playbook_dir | dirname }}"
     user_home: "{{ lookup('env', 'HOME') }}"
     zsh_custom: "{{ user_home }}/.oh-my-zsh/custom"
-    kitty_bin_dir: "{{ user_home }}/.local/kitty.app/{{ 'Contents/MacOS' if ansible_facts['os_family'] == 'Darwin' else 'bin' }}"
+    kitty_install_dir: "{{ (user_home + '/Applications') if ansible_facts['os_family'] == 'Darwin' else (user_home + '/.local') }}"
+    kitty_app_dir: "{{ kitty_install_dir }}/kitty.app"
+    kitty_bin_dir: "{{ kitty_app_dir }}/{{ 'Contents/MacOS' if ansible_facts['os_family'] == 'Darwin' else 'bin' }}"
 
   tasks:
     - name: Install base packages (macOS)
@@ -95,7 +97,7 @@
           action={{ 'will install/upgrade' if (kitty_installed.rc != 0 or kitty_latest.json.tag_name | regex_replace('^v', '') not in kitty_installed.stdout) else 'already up to date' }}
 
     - name: Install or upgrade Kitty
-      shell: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest={{ user_home }}/.local launch=n
+      shell: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest={{ kitty_install_dir }} launch=n
       when: >
         kitty_installed.rc != 0 or
         kitty_latest.json.tag_name | regex_replace('^v', '') not in kitty_installed.stdout
@@ -121,6 +123,7 @@
         state: directory
       loop:
         - "{{ user_home }}/.config/kitty"
+        - "{{ user_home }}/.config/tmux"
         - "{{ user_home }}/Documents/wallpapers"
 
     - name: Copy wallpapers (no overwrite)
@@ -139,7 +142,7 @@
 
     - name: Install Kitty desktop files
       copy:
-        src: "{{ user_home }}/.local/kitty.app/share/applications/{{ item }}"
+        src: "{{ kitty_app_dir }}/share/applications/{{ item }}"
         dest: "{{ user_home }}/.local/share/applications/{{ item }}"
         remote_src: true
       loop:
@@ -151,7 +154,7 @@
       replace:
         path: "{{ user_home }}/.local/share/applications/{{ item }}"
         regexp: '^Icon=kitty$'
-        replace: "Icon={{ user_home }}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png"
+        replace: "Icon={{ kitty_app_dir }}/share/icons/hicolor/256x256/apps/kitty.png"
       loop:
         - kitty.desktop
         - kitty-open.desktop
@@ -161,7 +164,7 @@
       replace:
         path: "{{ user_home }}/.local/share/applications/{{ item }}"
         regexp: '^Exec=kitty'
-        replace: "Exec={{ user_home }}/.local/kitty.app/bin/kitty"
+        replace: "Exec={{ kitty_bin_dir }}/kitty"
       loop:
         - kitty.desktop
         - kitty-open.desktop
@@ -211,3 +214,4 @@
         - { src: 'dots/gitconfig', dest: '.gitconfig' }
         - { src: 'dots/always_forget.md', dest: 'always-forget.md' }
         - { src: 'config/kitty/kitty.conf', dest: '.config/kitty/kitty.conf' }
+        - { src: 'config/tmux/tmux.conf', dest: '.config/tmux/tmux.conf' }

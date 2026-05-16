@@ -1,4 +1,4 @@
-start-at-login = true
+start-at-login = false
 
 [gaps]
 inner.horizontal = 0
@@ -32,19 +32,31 @@ alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 
 # Focus
-alt-left  = 'focus left'
-alt-down  = 'focus down'
-alt-up    = 'focus up'
-alt-right = 'focus right'
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
 
 # Move window
-alt-shift-left  = 'move left'
-alt-shift-down  = 'move down'
-alt-shift-up    = 'move up'
-alt-shift-right = 'move right'
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
 
 # Launch terminal
 alt-enter = 'exec-and-forget open -na kitty'
 
 # Reload config
 alt-shift-semicolon = 'reload-config'
+
+# Enter resize mode
+alt-r = 'mode resize'
+
+[mode.resize.binding]
+h = 'resize width -50'
+l = 'resize width +50'
+k = 'resize height +50'
+j = 'resize height -50'
+alt-r = 'mode main'
+enter = 'mode main'
+esc = 'mode main'
