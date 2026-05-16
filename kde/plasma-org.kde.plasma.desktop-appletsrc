@@ -98,7 +98,6 @@ DialogHeight=540
 DialogWidth=720
 
 [Containments][2][Applets][50][Configuration][General]
-customButtonImage=/home/kevinjin/Documents/wallpapers/Kubuntu_logo.svg
 favoritesPortedToKAstats=true
 limitDepth=true
 showRecentApps=false
