@@ -152,7 +152,7 @@
         - { src: "local/share/fcitx5/rime/default.custom.yaml", dest: ".local/share/fcitx5/rime/default.custom.yaml" }
       when: ansible_facts['os_family'] != "Darwin"
 
-    # basically for wechat lol (xwayland)
+    # XMODIFIERS only — GTK_IM_MODULE/QT_IM_MODULE omitted so Wayland-native apps use the Wayland IM protocol directly
     - name: Set fcitx5 IM environment variables for sandboxed/XWayland apps
       copy:
         src: "{{ dotfiles_dir }}/config/environment.d/fcitx5.conf"
