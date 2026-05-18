@@ -3,28 +3,17 @@
   vars:
     dotfiles_dir: "{{ playbook_dir | dirname }}"
     user_home: "{{ lookup('env', 'HOME') }}"
-    claude_src: "{{ dotfiles_dir }}/claude"
-    claude_dest: "{{ user_home }}/.claude"
 
   tasks:
-    - name: Ensure ~/.claude/rules exists
+    - name: Ensure ~/.claude exists
       file:
-        path: "{{ claude_dest }}/rules"
+        path: "{{ user_home }}/.claude"
         state: directory
         mode: '0755'
 
     - name: Symlink CLAUDE.md
       file:
-        src: "{{ claude_src }}/CLAUDE.md"
-        dest: "{{ claude_dest }}/CLAUDE.md"
+        src: "{{ dotfiles_dir }}/claude/CLAUDE.md"
+        dest: "{{ user_home }}/.claude/CLAUDE.md"
         state: link
         force: yes
-
-    - name: Symlink rules files
-      file:
-        src: "{{ claude_src }}/rules/{{ item | basename }}"
-        dest: "{{ claude_dest }}/rules/{{ item | basename }}"
-        state: link
-        force: yes
-      with_fileglob:
-        - "{{ claude_src }}/rules/*.md"
