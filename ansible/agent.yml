@@ -1,0 +1,32 @@
+- hosts: localhost
+  connection: local
+  vars:
+    dotfiles_dir: "{{ playbook_dir | dirname }}"
+    user_home: "{{ lookup('env', 'HOME') }}"
+
+  tasks:
+    - name: Ensure ~/.claude exists
+      file:
+        path: "{{ user_home }}/.claude"
+        state: directory
+        mode: '0755'
+
+    - name: Symlink CLAUDE.md
+      file:
+        src: "{{ dotfiles_dir }}/claude/CLAUDE.md"
+        dest: "{{ user_home }}/.claude/CLAUDE.md"
+        state: link
+        force: yes
+
+    - name: Ensure ~/.cursor/rules exists
+      file:
+        path: "{{ user_home }}/.cursor/rules"
+        state: directory
+        mode: '0755'
+
+    - name: Symlink universal.md
+      file:
+        src: "{{ dotfiles_dir }}/cursor/rules/universal.md"
+        dest: "{{ user_home }}/.cursor/rules/universal.md"
+        state: link
+        force: yes
