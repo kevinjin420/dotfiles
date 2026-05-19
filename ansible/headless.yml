@@ -67,6 +67,7 @@
       loop:
         - { name: zsh-autosuggestions,    type: plugins, repo: 'https://github.com/zsh-users/zsh-autosuggestions' }
         - { name: zsh-syntax-highlighting, type: plugins, repo: 'https://github.com/zsh-users/zsh-syntax-highlighting' }
+        - { name: powerlevel10k,           type: themes,  repo: 'https://github.com/romkatv/powerlevel10k' }
 
     - name: Setup LazyVim
       git:
@@ -89,6 +90,7 @@
         force: yes
       loop:
         - { src: 'dots/zshrc',          dest: '.zshrc' }
+        - { src: 'dots/p10k.zsh',       dest: '.p10k.zsh' }
         - { src: 'dots/gitconfig',      dest: '.gitconfig' }
         - { src: 'dots/always_forget.md', dest: 'always-forget.md' }
         - { src: 'config/tmux/tmux.conf', dest: '.config/tmux/tmux.conf' }
