@@ -11,3 +11,5 @@
 	autoSetupRemote = true
 [core]
 	editor = nvim
+[alias]
+	pull-branch = "!f() { git fetch origin \"$1:$1\"; }; f"
