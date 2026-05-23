@@ -3,48 +3,19 @@
   vars:
     dotfiles_dir: "{{ playbook_dir | dirname }}"
     user_home: "{{ lookup('env', 'HOME') }}"
-  # Moved away from karabiner + aerospace; sudo prompt no longer needed.
-  # vars_prompt:
-  #   - name: sudo_password
-  #     prompt: "Enter sudo password (required for karabiner-elements .pkg install)"
-  #     private: yes
 
   tasks:
-    - name: Tap nikitabobko/tap for aerospace
+    - name: Tap jurplel/tap for instant-space-switcher
       community.general.homebrew_tap:
-        name: nikitabobko/tap
+        name: jurplel/tap
         state: present
 
-    - name: Install aerospace
+    - name: Install instant-space-switcher
       community.general.homebrew_cask:
-        name: nikitabobko/tap/aerospace
+        name: jurplel/tap/instant-space-switcher
         state: present
-
-    # Moved away from karabiner-elements.
-    # - name: Install karabiner-elements (sudo)
-    #   community.general.homebrew_cask:
-    #     name: karabiner-elements
-    #     state: present
-    #     sudo_password: "{{ sudo_password }}"
-
-    - name: Create required directories
-      file:
-        path: "{{ item }}"
-        state: directory
-      loop:
-        - "{{ user_home }}/.config/aerospace"
 
     - name: Install rectangle (window snapping)
       community.general.homebrew_cask:
         name: rectangle
         state: present
-
-    - name: Create symlinks for macOS dotfiles
-      file:
-        src: "{{ dotfiles_dir }}/{{ item.src }}"
-        dest: "{{ user_home }}/{{ item.dest }}"
-        state: link
-        force: yes
-      loop:
-        - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
-
