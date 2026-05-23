@@ -57,6 +57,8 @@
         - "--file kwinrc --group Tiling --key padding 4"
         - "--file kwinrc --group org.kde.kdecoration2 --key library org.kde.klassy"
         - "--file kwinrc --group org.kde.kdecoration2 --key theme Klassy"
+        - "--file kwinrc --group org.kde.kdecoration2 --key BorderSize None"
+        - "--file kwinrc --group org.kde.kdecoration2 --key BorderSizeAuto false"
         - "--file kwinrc --group TabBox --key ActivitiesMode 0"
         - "--file kwinrc --group TabBox --key HighlightWindows false"
         - "--file kwinrc --group TabBox --key LayoutName compact"
