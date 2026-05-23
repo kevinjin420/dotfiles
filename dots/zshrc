@@ -72,3 +72,5 @@ if [[ -d /opt/st/stm32cubeclt_1.21.0 ]]; then
     export PATH="$PATH:/opt/st/stm32cubeclt_1.21.0/STM32CubeProgrammer/bin"
     export PATH="$PATH:/opt/st/stm32cubeclt_1.21.0/GNU-tools-for-STM32/bin"
 fi
+
+export PATH="/home/kevinjin/.pixi/bin:$PATH"
