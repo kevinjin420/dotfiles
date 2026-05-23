@@ -10,16 +10,15 @@
   #     private: yes
 
   tasks:
-    # Moved away from aerospace (using rectangle instead).
-    # - name: Tap nikitabobko/tap for aerospace
-    #   community.general.homebrew_tap:
-    #     name: nikitabobko/tap
-    #     state: present
-    #
-    # - name: Install aerospace (no sudo)
-    #   community.general.homebrew_cask:
-    #     name: nikitabobko/tap/aerospace
-    #     state: present
+    - name: Tap nikitabobko/tap for aerospace
+      community.general.homebrew_tap:
+        name: nikitabobko/tap
+        state: present
+
+    - name: Install aerospace
+      community.general.homebrew_cask:
+        name: nikitabobko/tap/aerospace
+        state: present
 
     # Moved away from karabiner-elements.
     # - name: Install karabiner-elements (sudo)
@@ -28,13 +27,12 @@
     #     state: present
     #     sudo_password: "{{ sudo_password }}"
 
-    # - name: Create required directories
-    #   file:
-    #     path: "{{ item }}"
-    #     state: directory
-    #   loop:
-    #     - "{{ user_home }}/.config/aerospace"
-    #     - "{{ user_home }}/.config/karabiner"
+    - name: Create required directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ user_home }}/.config/aerospace"
 
     - name: Install alt-tab
       community.general.homebrew_cask:
@@ -46,15 +44,14 @@
         name: rectangle
         state: present
 
-    # - name: Create symlinks for macOS dotfiles
-    #   file:
-    #     src: "{{ dotfiles_dir }}/{{ item.src }}"
-    #     dest: "{{ user_home }}/{{ item.dest }}"
-    #     state: link
-    #     force: yes
-    #   loop:
-    #     - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
-    #     - { src: 'config/karabiner/karabiner.json', dest: '.config/karabiner/karabiner.json' }
+    - name: Create symlinks for macOS dotfiles
+      file:
+        src: "{{ dotfiles_dir }}/{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: yes
+      loop:
+        - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
 
     - name: Configure AltTab preferences
       osx_defaults:
