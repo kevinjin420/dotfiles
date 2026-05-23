@@ -34,11 +34,6 @@
       loop:
         - "{{ user_home }}/.config/aerospace"
 
-    - name: Install alt-tab
-      community.general.homebrew_cask:
-        name: alt-tab
-        state: present
-
     - name: Install rectangle (window snapping)
       community.general.homebrew_cask:
         name: rectangle
@@ -53,15 +48,3 @@
       loop:
         - { src: 'config/aerospace/aerospace.toml', dest: '.config/aerospace/aerospace.toml' }
 
-    - name: Configure AltTab preferences
-      osx_defaults:
-        domain: com.lwouis.alt-tab-macos
-        key: "{{ item.key }}"
-        type: string
-        value: "{{ item.value }}"
-      loop:
-        - { key: 'appearanceStyle',        value: '2' }
-        - { key: 'appearanceTheme',        value: '2' }
-        - { key: 'previewFadeInAnimation', value: 'false' }
-        - { key: 'windowDisplayDelay',     value: '0' }
-        - { key: 'updatePolicy',           value: '1' }
