@@ -30,6 +30,22 @@
       failed_when: _klassy_check.rc != 0
 
   tasks:
+    - name: Get latest desktop-status-bar release info
+      uri:
+        url: https://api.github.com/repos/kevinjin420/desktop-status/releases/latest
+        return_content: true
+      register: _desktop_status_release
+
+    - name: Download desktop-status-bar plasmoid
+      get_url:
+        url: "{{ (_desktop_status_release.json.assets | selectattr('name', 'equalto', 'desktop-status-bar.plasmoid') | first).browser_download_url }}"
+        dest: /tmp/desktop-status-bar.plasmoid
+        force: true
+
+    - name: Install desktop-status-bar plasmoid
+      shell: kpackagetool6 --type Plasma/Applet --install /tmp/desktop-status-bar.plasmoid 2>/dev/null || kpackagetool6 --type Plasma/Applet --upgrade /tmp/desktop-status-bar.plasmoid
+      changed_when: false
+
     - name: Create color-schemes directory
       file:
         path: "{{ user_home }}/.local/share/color-schemes"
