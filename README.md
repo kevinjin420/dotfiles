@@ -48,10 +48,13 @@ Main setup
 - symlinks dotfiles.
 
 ### `headless.yml`
-Same as `local.yml` but without Kitty — for servers or raspis. Tmux incl. 
+Same as `local.yml` but without Kitty
+
+For servers or raspis. Tmux incl. 
 
 ### `kde.yml`
 KDE Plasma setup. Applies kwin settings, installs my own desktop-status-bar plasmoid, sets the AritimDark color scheme, and deploys plasma applet config
+
 Requires `kwriteconfig6`, aka only plasma 6 wayland compatible
 
 ### `macos.yml`
