@@ -28,6 +28,11 @@
         name: nikitabobko/tap/aerospace
         state: present
 
+    - name: Install rectangle (window snapping)
+      community.general.homebrew_cask:
+        name: rectangle
+        state: present
+
     - name: Create required directories
       file:
         path: "{{ user_home }}/.config/aerospace"

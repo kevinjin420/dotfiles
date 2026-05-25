@@ -57,14 +57,18 @@ KDE Plasma setup. Applies kwin settings, installs my own desktop-status-bar plas
 
 Requires `kwriteconfig6`, aka only plasma 6 wayland compatible
 
-### `macos.yml`
-macOS extras. Still WIP and tuning
+### `macos-aerospace.yml` ← macOS flagship
+Full macOS window management setup:
+- **Aerospace** — tiling WM with named workspaces
+  - `alt-#` to switch workspace, `alt-shift-#` to move window
+- **AltTab fork** ([kevinjin420/alt-tab-macos](https://github.com/kevinjin420/alt-tab-macos)) — per-workspace alt-tab, downloaded from pre-built GitHub releases
+- **Rectangle** — window snapping
 
-### `macos-aerospace.yml`
-Alternative macOS window management using Aerospace (tiling WM) + a custom alt-tab fork for per-workspace alt-tab. Builds and installs AltTab from source.
+### `macos.yml`
+Minimal macOS extras: instant-space-switcher + Rectangle. No tiling WM.
 
 ### `macos-iss.yml`
-Lighter macOS desktop switching using instant-space-switcher + Rectangle. No tiling WM.
+Dead-end path — kept for reference. instant-space-switcher with native macOS Spaces. Window-move-to-space is broken on macOS 26+ (private API removed).
 
 ### `rime.yml`
 Sets up fcitx5 + Rime Chinese input method. Installs Qt/GTK frontends for the detected distro.
