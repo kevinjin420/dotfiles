@@ -27,8 +27,3 @@
       community.general.homebrew_cask:
         name: jurplel/tap/instant-space-switcher
         state: present
-
-    - name: Install rectangle (window snapping)
-      community.general.homebrew_cask:
-        name: rectangle
-        state: present

@@ -28,38 +28,6 @@
         name: nikitabobko/tap/aerospace
         state: present
 
-    - name: Install rectangle (window snapping)
-      community.general.homebrew_cask:
-        name: rectangle
-        state: present
-
-    - name: Clone XOR-op alt-tab fork (7.38.1-aerospace)
-      git:
-        repo: https://github.com/XOR-op/alt-tab-macos.git
-        dest: "{{ alt_tab_fork_dir }}"
-        version: 7.38.1-aerospace
-        depth: 1
-
-    - name: Set up local codesigning certificate
-      command: bash scripts/codesign/setup_local.sh
-      args:
-        chdir: "{{ alt_tab_fork_dir }}"
-
-    - name: Build alt-tab fork
-      command: >
-        xcodebuild
-        -workspace alt-tab-macos.xcworkspace
-        -scheme Debug
-        -derivedDataPath build
-      args:
-        chdir: "{{ alt_tab_fork_dir }}"
-
-    - name: Install AltTab.app to /Applications
-      command: >
-        cp -r
-        {{ alt_tab_fork_dir }}/build/Build/Products/Debug/AltTab.app
-        /Applications/AltTab.app
-
     - name: Create required directories
       file:
         path: "{{ user_home }}/.config/aerospace"
