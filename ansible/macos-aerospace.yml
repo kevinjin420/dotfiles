@@ -1,18 +1,21 @@
-# Approach: aerospace for workspace switching + window movement
+# Approach: aerospace for workspace switching + window movement,
+#           XOR-op/alt-tab-macos fork for per-workspace alt-tab.
 #
 # Achieves:
-#   [x] alt-#         — switch to workspace
-#   [x] alt-shift-#   — move window to workspace
-#   [ ] alt-tab current desktop only — MISSING
-#       Reason: aerospace manages its own virtual layer (hide/show windows),
-#               not native macOS Spaces. Alt-tab apps filtering by "current space"
-#               see all aerospace workspace windows regardless.
+#   [x] alt-#         — switch to workspace (aerospace)
+#   [x] alt-shift-#   — move window to workspace (aerospace)
+#   [x] alt-tab current workspace only — via XOR-op's fork of alt-tab
+#       Mechanism: aerospace hides off-workspace windows by moving them
+#       off-screen at tiny dimensions; the fork filters those out.
+#       Source: https://github.com/XOR-op/alt-tab-macos (7.38.1-aerospace)
+#       No pre-built releases — must build from source. Requires Xcode.
 
 - hosts: localhost
   connection: local
   vars:
     dotfiles_dir: "{{ playbook_dir | dirname }}"
     user_home: "{{ lookup('env', 'HOME') }}"
+    alt_tab_fork_dir: /tmp/alt-tab-macos-fork
 
   tasks:
     - name: Tap nikitabobko/tap for aerospace
@@ -29,6 +32,33 @@
       community.general.homebrew_cask:
         name: rectangle
         state: present
+
+    - name: Clone XOR-op alt-tab fork (7.38.1-aerospace)
+      git:
+        repo: https://github.com/XOR-op/alt-tab-macos.git
+        dest: "{{ alt_tab_fork_dir }}"
+        version: 7.38.1-aerospace
+        depth: 1
+
+    - name: Set up local codesigning certificate
+      command: bash scripts/codesign/setup_local.sh
+      args:
+        chdir: "{{ alt_tab_fork_dir }}"
+
+    - name: Build alt-tab fork
+      command: >
+        xcodebuild
+        -workspace alt-tab-macos.xcworkspace
+        -scheme Debug
+        -derivedDataPath build
+      args:
+        chdir: "{{ alt_tab_fork_dir }}"
+
+    - name: Install AltTab.app to /Applications
+      command: >
+        cp -r
+        {{ alt_tab_fork_dir }}/build/Build/Products/Debug/AltTab.app
+        /Applications/AltTab.app
 
     - name: Create required directories
       file:
