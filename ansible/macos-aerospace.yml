@@ -1,0 +1,43 @@
+# Approach: aerospace for workspace switching + window movement
+#
+# Achieves:
+#   [x] alt-#         — switch to workspace
+#   [x] alt-shift-#   — move window to workspace
+#   [ ] alt-tab current desktop only — MISSING
+#       Reason: aerospace manages its own virtual layer (hide/show windows),
+#               not native macOS Spaces. Alt-tab apps filtering by "current space"
+#               see all aerospace workspace windows regardless.
+
+- hosts: localhost
+  connection: local
+  vars:
+    dotfiles_dir: "{{ playbook_dir | dirname }}"
+    user_home: "{{ lookup('env', 'HOME') }}"
+
+  tasks:
+    - name: Tap nikitabobko/tap for aerospace
+      community.general.homebrew_tap:
+        name: nikitabobko/tap
+        state: present
+
+    - name: Install aerospace
+      community.general.homebrew_cask:
+        name: nikitabobko/tap/aerospace
+        state: present
+
+    - name: Install rectangle (window snapping)
+      community.general.homebrew_cask:
+        name: rectangle
+        state: present
+
+    - name: Create required directories
+      file:
+        path: "{{ user_home }}/.config/aerospace"
+        state: directory
+
+    - name: Symlink aerospace config
+      file:
+        src: "{{ dotfiles_dir }}/config/aerospace/aerospace.toml"
+        dest: "{{ user_home }}/.config/aerospace/aerospace.toml"
+        state: link
+        force: yes
