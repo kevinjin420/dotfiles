@@ -1,15 +1,3 @@
-# Approach: aerospace for workspace switching + window movement,
-#           kevinjin420/alt-tab-macos fork for per-workspace alt-tab.
-#
-# Achieves:
-#   [x] alt-#         — switch to workspace (aerospace)
-#   [x] alt-shift-#   — move window to workspace (aerospace)
-#   [x] alt-tab current workspace only — via kevinjin420's fork of alt-tab
-#       Mechanism: aerospace exec-on-workspace-change notifies AltTab fork
-#       via CFMessagePort; fork filters windows by cached focused workspace.
-#       Source: https://github.com/kevinjin420/alt-tab-macos
-#       Pre-built releases published via GitHub Actions on each push to main.
-
 - hosts: localhost
   connection: local
   vars:

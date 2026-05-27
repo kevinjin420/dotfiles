@@ -1,16 +1,3 @@
-# Approach: instant-space-switcher for desktop switching + alt-tab on current space
-#
-# Achieves:
-#   [x] alt-#         — switch to desktop (ISS uses native macOS Spaces)
-#   [ ] alt-shift-#   — move window to desktop — DEAD END
-#       Reason: macOS 26 removed CGSMoveWindowsToManagedSpace (and all related
-#               private APIs). No third-party tool can move a window to another
-#               Space via keybind anymore.
-#   [ ] alt-tab current desktop only — was working via alt-tab app, but alt-tab
-#       went paid (removed in c916d12).
-#
-# This path is a dead end until macOS exposes a public window-move-to-space API.
-
 - hosts: localhost
   connection: local
   vars:
