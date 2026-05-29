@@ -12,7 +12,8 @@
 [core]
 	editor = nvim
 [alias]
-	pull-branch = "!f() { git fetch origin \"$1:$1\"; }; f"
+  pull-branch = "!f() { git fetch origin \"$1:$1\"; }; f"
+  clean-fetch = "!git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D"
   A = add .
   C = commit
   S = status
