@@ -146,6 +146,7 @@
         src: "{{ kitty_app_dir }}/share/applications/{{ item }}"
         dest: "{{ user_home }}/.local/share/applications/{{ item }}"
         remote_src: true
+        force: no
       loop:
         - kitty.desktop
         - kitty-open.desktop
