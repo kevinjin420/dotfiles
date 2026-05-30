@@ -17,7 +17,7 @@
 
     - name: Install base packages (Debian/Ubuntu)
       ansible.builtin.apt:
-        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
+        name: [zsh, fzf, git, curl, python3, cowsay, sl]
         state: present
         update_cache: true
       become: true
@@ -176,11 +176,17 @@
         dest: "{{ user_home }}/.config/xdg-terminals.list"
       when: ansible_facts['os_family'] != "Darwin"
 
+    - name: Check if nvim config exists
+      stat:
+        path: "{{ user_home }}/.config/nvim"
+      register: nvim_dir
+
     - name: Setup LazyVim
       git:
         repo: https://github.com/LazyVim/starter
         dest: "{{ user_home }}/.config/nvim"
         update: false
+      when: not nvim_dir.stat.exists
 
     - name: Install fonts (Linux)
       copy:
@@ -202,6 +208,23 @@
       with_fileglob:
         - "{{ dotfiles_dir }}/fonts/*.ttf"
       when: ansible_facts['os_family'] == "Darwin"
+    - name: Install udev rules for embedded dev boards
+      file:
+        src: "{{ item }}"
+        dest: "/etc/udev/rules.d/{{ item | basename }}"
+        state: link
+        force: yes
+      with_fileglob:
+        - "{{ dotfiles_dir }}/udev/rules.d/*.rules"
+      become: true
+      when: ansible_facts['os_family'] != "Darwin"
+
+    - name: Reload udev rules
+      command: udevadm control --reload-rules
+      become: true
+      changed_when: false
+      when: ansible_facts['os_family'] != "Darwin"
+
     - name: Create symlinks for dotfiles
       file:
         src: "{{ dotfiles_dir }}/{{ item.src }}"
