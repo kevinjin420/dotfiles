@@ -33,7 +33,6 @@ Main setup
 - Installs packages
   - zsh
   - fzf
-  - neovim
   - git
   - curl
   - kitty
@@ -43,9 +42,10 @@ Main setup
   - autosuggestions
   - syntax-highlighting
   - powerlevel10k
-- sets up LazyVim
+- sets up LazyVim (skipped if `~/.config/nvim` already exists)
 - installs fonts
-- symlinks dotfiles.
+- symlinks dotfiles
+- installs udev rules for embedded dev boards (Linux only)
 
 ### `headless.yml`
 Same as `local.yml` but without Kitty
@@ -75,6 +75,24 @@ Sets up fcitx5 + Rime Chinese input method. Installs Qt/GTK frontends for the de
 
 ### `agent.yml`
 Symlinks `CLAUDE.md` to `~/.claude/CLAUDE.md` and `universal.md` to `~/.cursor/rules/universal.md` for AI coding assistant config.
+
+---
+
+## udev rules
+
+Tracked in `udev/rules.d/` and symlinked into `/etc/udev/rules.d/` by `local.yml` on Linux.
+
+| File | Device |
+|------|--------|
+| `49-stlinkv1.rules` | STM32VL discovery (ST-Link v1) |
+| `49-stlinkv2-1.rules` | STM32 Nucleo (ST-Link v2-1) |
+| `49-stlinkv2.rules` | STM32 discovery (ST-Link v2) |
+| `49-stlinkv3.rules` | ST-Link v3 |
+| `50-programmer_usb.rules` | FTDI FT2232 programmer, custom vendor 33aa |
+| `50-stm32_dfu.rules` | STM32 DFU mode |
+| `52-digilent-usb.rules` | Digilent FPGA/USB |
+| `99-jlink.rules` | SEGGER J-Link + CMSIS-DAP |
+| `99-SaleaeLogic.rules` | Saleae Logic analyzers |
 
 ---
 
