@@ -106,3 +106,5 @@ Tracked in `udev/rules.d/` and symlinked into `/etc/udev/rules.d/` by `local.yml
 | `dots/always_forget.md` | `~/always-forget.md` |
 | `config/kitty/kitty.conf` | `~/.config/kitty/kitty.conf` |
 | `config/tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
+| `config/fastfetch/config.jsonc` | `~/.config/fastfetch/config.jsonc` |
+| `config/fastfetch/kuromi.txt` | `~/.config/fastfetch/kuromi.txt` |

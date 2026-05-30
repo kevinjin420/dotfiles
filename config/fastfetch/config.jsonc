@@ -1,0 +1,25 @@
+{
+    "logo": {
+        "source": "~/.config/fastfetch/kuromi.txt",
+        "type": "file"
+    },
+    "modules": [
+      "title",
+      "separator",
+      "os",
+      "host",
+      "kernel",
+      "uptime",
+      "packages",
+      "shell",
+      "de",
+      "wm",
+      "terminal",
+      "cpu",
+      "gpu",
+      "memory",
+      "disk",
+      "break",
+      "colors"
+    ]
+}
