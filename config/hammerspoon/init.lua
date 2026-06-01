@@ -1,34 +1,20 @@
--- Move the focused window to macOS Desktop N (1-9), SIP-free.
+-- Move the focused window to macOS Desktop N (1-9).
 --
--- macOS 26 exposes no API to move another app's window to a Space, so we
--- synthesize the native gesture: grab the window by its title bar, switch
--- Space while "holding" it (so it travels), then drop it.
+-- Trigger: alt-shift-#
 --
--- Trigger:  ctrl-shift-#   (bound here)
--- Internal: alt-#          (must be set in System Settings as the native
---                           "Switch to Desktop N" shortcut)
+-- On macOS 26 Tahoe, SLSSetWindowListWorkspace (moveWindowToSpace) returns
+-- true but does nothing, and all AX-based paths are blocked. The space switch
+-- still works; the window will follow once Hammerspoon or Apple fixes the API.
 --
--- Requires, in System Settings:
+-- Requires in System Settings:
 --   * Keyboard > Shortcuts > Mission Control > Switch to Desktop 1-9 = Option+1-9
 --   * Mission Control > "Automatically rearrange Spaces" = OFF
---   * the 9 desktops pre-created in Mission Control
 
--- Modifier the native "Switch to Desktop N" shortcut uses. Keep in sync with
--- whatever you set in System Settings.
-local NATIVE_SWITCH_MODS = { "alt" }
-
--- Grab point inside the title bar, measured from the window's top-left.
--- TITLE_X clears the traffic-light buttons. Tab-bar apps (Chrome) and custom
--- title bars (VSCode) are the fragile cases — tune these if a window won't grab.
-local TITLE_X = 90
-local TITLE_Y = 11
-
--- How long to wait for the (instant-space-switcher) Space change to land
--- before releasing the window. Bump up if windows get left behind.
-local SWITCH_SETTLE_US = 180000
-
+local spaces = require("hs.spaces")
 local et = hs.eventtap
-local types = et.event.types
+
+local NATIVE_SWITCH_MODS = { "alt" }
+local KEY_HOLD_US = 100000
 
 local function moveFocusedWindowToDesktop(n)
   local win = hs.window.focusedWindow()
@@ -38,28 +24,31 @@ local function moveFocusedWindowToDesktop(n)
     return
   end
 
-  local f = win:frame()
-  local grab = hs.geometry.point(f.x + TITLE_X, f.y + TITLE_Y)
-  local restore = hs.mouse.absolutePosition()
+  local screenSpaces, err = spaces.spacesForScreen(win:screen())
+  if not screenSpaces then
+    hs.alert.show("spacesForScreen failed: " .. tostring(err))
+    return
+  end
+  if n > #screenSpaces then
+    hs.alert.show("Desktop " .. n .. " does not exist (" .. #screenSpaces .. " total)")
+    return
+  end
 
-  -- press on the title bar and begin a real drag
-  et.event.newMouseEvent(types.leftMouseDown, grab):post()
-  hs.timer.usleep(60000)
-  et.event.newMouseEvent(types.leftMouseDragged,
-    hs.geometry.point(grab.x + 6, grab.y)):post()
-  hs.timer.usleep(60000)
+  local targetSpaceID = screenSpaces[n]
+  if spaces.focusedSpace() == targetSpaceID then return end
 
-  -- switch desktops while the window is held -> it follows
-  et.keyStroke(NATIVE_SWITCH_MODS, tostring(n), 0)
-  hs.timer.usleep(SWITCH_SETTLE_US)
+  -- Best-effort window move via private API. Returns true on macOS 26 without
+  -- acting; left here so it works automatically if the API is ever fixed.
+  spaces.moveWindowToSpace(win:id(), targetSpaceID, true)
 
-  -- drop it on the new desktop, then put the cursor back
-  et.event.newMouseEvent(types.leftMouseUp, hs.mouse.absolutePosition()):post()
-  hs.mouse.absolutePosition(restore)
+  -- Switch to the target space with the native shortcut. Avoids the Mission
+  -- Control flash that spaces.gotoSpace() triggers on macOS 26 by design.
+  hs.timer.usleep(50000)
+  et.keyStroke(NATIVE_SWITCH_MODS, tostring(n), KEY_HOLD_US)
 end
 
 for i = 1, 9 do
-  hs.hotkey.bind({ "ctrl", "shift" }, tostring(i), function()
+  hs.hotkey.bind({ "alt", "shift" }, tostring(i), function()
     moveFocusedWindowToDesktop(i)
   end)
 end

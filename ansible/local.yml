@@ -117,6 +117,15 @@
         - kitty
         - kitten
 
+    - name: Install scripts to ~/.local/bin
+      file:
+        src: "{{ dotfiles_dir }}/scripts/{{ item }}"
+        dest: "{{ user_home }}/.local/bin/{{ item }}"
+        state: link
+        force: yes
+      loop:
+        - git-set-author
+
     - name: Create required directories
       file:
         path: "{{ item }}"
