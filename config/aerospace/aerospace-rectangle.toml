@@ -1,11 +1,6 @@
 start-at-login = true
-# alt-tab integration, hardcoded binary path
+# works with alt-tab config
 exec-on-workspace-change = ['/bin/bash', '-c', '/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-workspace-changed=$AEROSPACE_FOCUSED_WORKSPACE']
-
-# only left right split
-default-root-container-layout = 'tiles'
-default-root-container-orientation = 'horizontal'
-accordion-padding = 0
 
 [gaps]
 inner.horizontal = 0
@@ -41,22 +36,7 @@ alt-shift-9 = ['move-node-to-workspace 9', 'exec-and-forget /bin/bash -c "/Appli
 alt-enter = 'exec-and-forget open -na kitty'
 alt-shift-semicolon = 'reload-config'
 
-ctrl-alt-left  = ['layout tiling', 'move left']
-ctrl-alt-right = ['layout tiling', 'move right']
-ctrl-alt-up    = 'layout tiling'
-ctrl-alt-down  = 'layout floating'
-
-# Auto-tile browser + editor (these split into left/right halves).
-# Each must also fire the AltTab notify, then stop (no fall-through to float).
-[[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-run = ['layout tiling', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
-
-[[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode'
-run = ['layout tiling', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
-
-# Default: everything else floats (kitty, Discord, Slack, Finder, ...)
+# Disable tiling — all windows float
 [[on-window-detected]]
 check-further-callbacks = true
 run = 'layout floating'

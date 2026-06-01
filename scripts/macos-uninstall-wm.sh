@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Uninstalls everything that macos-aerospace.yml or macos-iss.yml may have installed.
-# Safe to run before switching between the two playbooks.
+# Uninstalls everything that macos-aerospace.yml, macos-aerospace-rectangle.yml,
+# or macos-iss.yml may have installed.
+# Safe to run before switching between the playbooks.
 
 set -euo pipefail
 
@@ -15,7 +16,7 @@ pkill -f "AeroSpace" 2>/dev/null || true
 sleep 1
 
 echo "==> Uninstalling Homebrew casks..."
-for cask in nikitabobko/tap/aerospace jurplel/tap/instant-space-switcher; do
+for cask in nikitabobko/tap/aerospace jurplel/tap/instant-space-switcher rectangle; do
   if brew list --cask "$cask" &>/dev/null; then
     brew uninstall --cask "$cask" && echo "  removed $cask"
   else
@@ -50,4 +51,4 @@ else
 fi
 
 echo ""
-echo "Done. You can now run either macos-aerospace.yml or macos-iss.yml cleanly."
+echo "Done. You can now run macos-aerospace.yml, macos-aerospace-rectangle.yml, or macos-iss.yml cleanly."

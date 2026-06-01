@@ -16,14 +16,19 @@
         name: nikitabobko/tap/aerospace
         state: present
 
+    - name: Install rectangle (window snapping)
+      community.general.homebrew_cask:
+        name: rectangle
+        state: present
+
     - name: Create required directories
       file:
         path: "{{ user_home }}/.config/aerospace"
         state: directory
 
-    - name: Symlink aerospace config
+    - name: Symlink aerospace config (all-floating, Rectangle-snapped variant)
       file:
-        src: "{{ dotfiles_dir }}/config/aerospace/aerospace.toml"
+        src: "{{ dotfiles_dir }}/config/aerospace/aerospace-rectangle.toml"
         dest: "{{ user_home }}/.config/aerospace/aerospace.toml"
         state: link
         force: yes

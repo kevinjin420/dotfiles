@@ -61,8 +61,14 @@ Requires `kwriteconfig6`, aka only plasma 6 wayland compatible
 Full macOS window management setup:
 - **Aerospace** — tiling WM with named workspaces
   - `alt-#` to switch workspace, `alt-shift-#` to move window
+  - `ctrl-alt-←/→` snap focused window to left/right half, `ctrl-alt-↑` tile (maximize if alone), `ctrl-alt-↓` untile back to floating
+  - Chrome + VSCode auto-tile; everything else (terminals, chat) floats with normal drag-drop
 - **AltTab fork** ([kevinjin420/alt-tab-macos](https://github.com/kevinjin420/alt-tab-macos)) — per-workspace alt-tab, downloaded from pre-built GitHub releases
-- **Rectangle** — window snapping
+
+Snapping uses Aerospace's native tiling so positions survive workspace switches. No Rectangle (see `macos-aerospace-rectangle.yml`).
+
+### `macos-aerospace-rectangle.yml`
+Legacy variant of the flagship: same Aerospace + AltTab fork, but every window floats and snapping is done by **Rectangle** instead of native tiling (config: `config/aerospace/aerospace-rectangle.toml`). Kept for reference — Rectangle-snapped floating windows get re-centered when Aerospace hides/restores them across workspace switches, which is why the flagship moved to native tiling.
 
 ### `macos.yml`
 Minimal macOS extras: instant-space-switcher + Rectangle. No tiling WM.
