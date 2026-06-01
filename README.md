@@ -73,8 +73,17 @@ Legacy variant of the flagship: same Aerospace + AltTab fork, but every window f
 ### `macos.yml`
 Minimal macOS extras: instant-space-switcher + Rectangle. No tiling WM.
 
-### `macos-iss.yml`
-Dead-end path — kept for reference. instant-space-switcher with native macOS Spaces. Window-move-to-space is broken on macOS 26+ (private API removed).
+### `macos-iss.yml` — native Spaces
+Native macOS Spaces as virtual desktops, no tiling WM. Positions never drift (macOS owns the Spaces) and Rectangle snapping is conflict-free.
+- **instant-space-switcher** — removes the Space-switch animation
+- **Rectangle** — left/right half snapping
+- **Hammerspoon** — `ctrl-shift-#` moves the focused window to Desktop N via a SIP-free synthetic "grab + switch Space" gesture, replacing the move-to-space private API that broke on macOS 15+
+
+Manual per-machine setup (not automatable):
+- Keyboard → Shortcuts → Mission Control: set **Switch to Desktop 1–9** to **Option+1–9** (`alt-#`)
+- Mission Control: turn **off** "Automatically rearrange Spaces", and pre-create 9 desktops
+
+Caveats: desktops are positional (fullscreening an app inserts a Space and shifts the numbering); the move gesture flickers the cursor, follows the window to the destination, and only works on windows with a grabbable title bar.
 
 ### `rime.yml`
 Sets up fcitx5 + Rime Chinese input method. Installs Qt/GTK frontends for the detected distro.

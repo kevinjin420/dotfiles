@@ -14,3 +14,25 @@
       community.general.homebrew_cask:
         name: jurplel/tap/instant-space-switcher
         state: present
+
+    - name: Install rectangle (window snapping)
+      community.general.homebrew_cask:
+        name: rectangle
+        state: present
+
+    - name: Install hammerspoon (move-window-to-desktop gesture)
+      community.general.homebrew_cask:
+        name: hammerspoon
+        state: present
+
+    - name: Create Hammerspoon config directory
+      file:
+        path: "{{ user_home }}/.hammerspoon"
+        state: directory
+
+    - name: Symlink Hammerspoon config
+      file:
+        src: "{{ dotfiles_dir }}/config/hammerspoon/init.lua"
+        dest: "{{ user_home }}/.hammerspoon/init.lua"
+        state: link
+        force: yes
