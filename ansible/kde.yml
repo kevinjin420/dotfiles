@@ -170,6 +170,28 @@
         - "--file kcminputrc --group Keyboard --key RepeatDelay 200"
         - "--file kcminputrc --group Keyboard --key RepeatRate 40"
 
+    - name: Enable natural scrolling for all libinput devices
+      shell: |
+        python3 << 'EOF'
+        import subprocess, re, os
+        cfg = os.path.expanduser("~/.config/kcminputrc")
+        try:
+            text = open(cfg).read()
+        except FileNotFoundError:
+            exit(0)
+        for match in re.finditer(r'^\[Libinput\](\[[^\]]+\])+', text, re.MULTILINE):
+            groups = re.findall(r'\[([^\]]+)\]', match.group(0))
+            device_name = groups[-1].lower()
+            if 'touchpad' not in device_name and 'trackpad' not in device_name:
+                continue
+            cmd = ['kwriteconfig6', '--file', 'kcminputrc']
+            for g in groups:
+                cmd += ['--group', g]
+            cmd += ['--key', 'NaturalScroll', 'true']
+            subprocess.run(cmd, check=True)
+        EOF
+      changed_when: false
+
     - name: Apply power settings
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
