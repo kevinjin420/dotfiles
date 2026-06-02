@@ -10,6 +10,12 @@
         state: present
       when: ansible_facts['os_family'] == "Darwin"
 
+    - name: Install CLI tools (macOS)
+      community.general.homebrew:
+        name: [sl, fastfetch, btop, gti, cowsay]
+        state: present
+      when: ansible_facts['os_family'] == "Darwin"
+
     - name: Add Google Chrome repo (Debian/Ubuntu)
       block:
         - name: Add Google signing key
@@ -40,20 +46,38 @@
       become: true
       when: ansible_facts['os_family'] == "Debian"
 
+    - name: Install Chrome, VS Code, and CLI tools (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name: [google-chrome-stable, code, sl, fastfetch, btop, gti, cowsay]
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Check if Discord is installed (Debian/Ubuntu)
+      command: dpkg -s discord
+      register: _discord_deb
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] == "Debian"
+
     - name: Download Discord (Debian/Ubuntu)
       ansible.builtin.get_url:
         url: "https://discord.com/api/download?platform=linux&format=deb"
         dest: /tmp/discord.deb
         mode: '0644'
-      when: ansible_facts['os_family'] == "Debian"
+      when:
+        - ansible_facts['os_family'] == "Debian"
+        - _discord_deb.rc != 0
 
-    - name: Install Chrome, VS Code, and Discord (Debian/Ubuntu)
+    - name: Install Discord (Debian/Ubuntu)
       ansible.builtin.apt:
-        name: [google-chrome-stable, code, /tmp/discord.deb]
+        name: /tmp/discord.deb
         state: present
-        update_cache: true
       become: true
-      when: ansible_facts['os_family'] == "Debian"
+      when:
+        - ansible_facts['os_family'] == "Debian"
+        - _discord_deb.rc != 0
 
     - name: Add Google Chrome repo (Fedora/RedHat)
       ansible.builtin.yum_repository:
@@ -77,19 +101,28 @@
       become: true
       when: ansible_facts['os_family'] == "RedHat"
 
+    - name: Install Chrome, VS Code, and CLI tools (Fedora/RedHat)
+      ansible.builtin.dnf:
+        name: [google-chrome-stable, code, sl, fastfetch, btop, gti, cowsay]
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Check if Discord is installed (Fedora/RedHat)
+      command: rpm -q discord
+      register: _discord_rpm
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] == "RedHat"
+
     - name: Download Discord (Fedora/RedHat)
       ansible.builtin.get_url:
         url: "https://discord.com/api/download?platform=linux&format=rpm"
         dest: /tmp/discord.rpm
         mode: '0644'
-      when: ansible_facts['os_family'] == "RedHat"
-
-    - name: Install Chrome and VS Code (Fedora/RedHat)
-      ansible.builtin.dnf:
-        name: [google-chrome-stable, code]
-        state: present
-      become: true
-      when: ansible_facts['os_family'] == "RedHat"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - _discord_rpm.rc != 0
 
     - name: Install Discord (Fedora/RedHat)
       ansible.builtin.dnf:
@@ -97,7 +130,9 @@
         state: present
         disable_gpg_check: true
       become: true
-      when: ansible_facts['os_family'] == "RedHat"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - _discord_rpm.rc != 0
 
     - name: Install base-devel and git for yay (Arch)
       community.general.pacman:
@@ -124,7 +159,8 @@
         - _yay_check.rc != 0
       changed_when: true
 
-    - name: Install Chrome, VS Code, and Discord via yay (Arch)
-      shell: yay -S --noconfirm --needed google-chrome visual-studio-code-bin discord
+    - name: Install Chrome, VS Code, Discord, and CLI tools via yay (Arch)
+      shell: yay -S --noconfirm --needed google-chrome visual-studio-code-bin discord sl fastfetch btop gti cowsay
       when: ansible_facts['os_family'] == "Archlinux"
       changed_when: false
+

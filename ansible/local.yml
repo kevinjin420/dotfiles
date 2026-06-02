@@ -187,6 +187,12 @@
         dest: "{{ user_home }}/.config/xdg-terminals.list"
       when: ansible_facts['os_family'] != "Darwin"
 
+    - name: Rebuild KDE application database
+      command: kbuildsycoca6 --noincremental
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] != "Darwin"
+
     - name: Setup nvim config symlink
       file:
         src: "{{ dotfiles_dir }}/config/nvim"
