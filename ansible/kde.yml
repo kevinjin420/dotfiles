@@ -226,6 +226,15 @@
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
 
+    - name: Set account avatar
+      copy:
+        src: "{{ dotfiles_dir }}/wallpapers/vertigo.jpg"
+        dest: "{{ item }}"
+        mode: '0644'
+      loop:
+        - "{{ user_home }}/.face"
+        - "{{ user_home }}/.face.icon"
+
     - name: Set desktop wallpaper
       shell: plasma-apply-wallpaperimage "{{ dotfiles_dir }}/wallpapers/bryce_canyon_valley.JPG"
       changed_when: false
