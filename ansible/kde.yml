@@ -60,7 +60,6 @@
       copy:
         content: "{{ lookup('file', dotfiles_dir + '/kde/plasma-org.kde.plasma.desktop-appletsrc') | replace('/home/kevinjin/', user_home + '/') }}"
         dest: "{{ user_home }}/.config/plasma-org.kde.plasma.desktop-appletsrc"
-      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Apply kwin settings
       shell: "kwriteconfig6 {{ item }}"
