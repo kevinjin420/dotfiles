@@ -181,6 +181,24 @@
         - kitty-open.desktop
       when: ansible_facts['os_family'] != "Darwin"
 
+    - name: Patch Kitty desktop TryExec path
+      replace:
+        path: "{{ user_home }}/.local/share/applications/{{ item }}"
+        regexp: '^TryExec=.*'
+        replace: "TryExec={{ kitty_bin_dir }}/kitty"
+      loop:
+        - kitty.desktop
+        - kitty-open.desktop
+      when: ansible_facts['os_family'] != "Darwin"
+
+    - name: Set kitty global shortcut via desktop file
+      lineinfile:
+        path: "{{ user_home }}/.local/share/applications/kitty.desktop"
+        regexp: '^X-KDE-Shortcuts='
+        line: "X-KDE-Shortcuts=Alt+Return"
+        insertafter: '^Categories='
+      when: ansible_facts['os_family'] != "Darwin"
+
     - name: Register kitty as default terminal
       copy:
         content: "kitty.desktop\n"

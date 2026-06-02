@@ -225,7 +225,6 @@
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Alt+*,,Window to Desktop 8"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
-        - '--file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return,none,Launch kitty"'
 
     - name: Set desktop wallpaper
       shell: plasma-apply-wallpaperimage "{{ dotfiles_dir }}/wallpapers/bryce_canyon_valley.JPG"
