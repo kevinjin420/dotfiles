@@ -56,9 +56,16 @@
         src: "{{ dotfiles_dir }}/kde/color-schemes/AritimDark.colors"
         dest: "{{ user_home }}/.local/share/color-schemes/AritimDark.colors"
 
+    - name: Get current activity ID
+      shell: |
+        grep -oP '^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}' \
+          ~/.config/kactivitymanagerdrc | head -1
+      register: _activity_id
+      changed_when: false
+
     - name: Deploy plasma applets config
       copy:
-        content: "{{ lookup('file', dotfiles_dir + '/kde/plasma-org.kde.plasma.desktop-appletsrc') | replace('/home/kevinjin/', user_home + '/') }}"
+        content: "{{ lookup('file', dotfiles_dir + '/kde/plasma-org.kde.plasma.desktop-appletsrc') | replace('/home/kevinjin/', user_home + '/') | replace('__ACTIVITY__', _activity_id.stdout | trim) }}"
         dest: "{{ user_home }}/.config/plasma-org.kde.plasma.desktop-appletsrc"
 
     - name: Get distributor logo icon name from os-release
@@ -218,7 +225,7 @@
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Alt+*,,Window to Desktop 8"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
-        - '--file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"'
+        - '--file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return,none,Launch kitty"'
 
     - name: Set desktop wallpaper
       shell: plasma-apply-wallpaperimage "{{ dotfiles_dir }}/wallpapers/bryce_canyon_valley.JPG"

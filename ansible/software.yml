@@ -1,0 +1,130 @@
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+
+  tasks:
+    - name: Install Chrome, VS Code, and Discord (macOS)
+      community.general.homebrew_cask:
+        name: [google-chrome, visual-studio-code, discord]
+        state: present
+      when: ansible_facts['os_family'] == "Darwin"
+
+    - name: Add Google Chrome repo (Debian/Ubuntu)
+      block:
+        - name: Add Google signing key
+          ansible.builtin.get_url:
+            url: https://dl.google.com/linux/linux_signing_key.pub
+            dest: /etc/apt/keyrings/google.asc
+            mode: '0644'
+        - name: Add Chrome apt repo
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/google.asc] https://dl.google.com/linux/chrome/deb/ stable main"
+            filename: google-chrome
+            state: present
+      become: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Add VS Code repo (Debian/Ubuntu)
+      block:
+        - name: Add Microsoft signing key
+          ansible.builtin.get_url:
+            url: https://packages.microsoft.com/keys/microsoft.asc
+            dest: /etc/apt/keyrings/microsoft.asc
+            mode: '0644'
+        - name: Add VS Code apt repo
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.asc] https://packages.microsoft.com/repos/code stable main"
+            filename: vscode
+            state: present
+      become: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Download Discord (Debian/Ubuntu)
+      ansible.builtin.get_url:
+        url: "https://discord.com/api/download?platform=linux&format=deb"
+        dest: /tmp/discord.deb
+        mode: '0644'
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Chrome, VS Code, and Discord (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name: [google-chrome-stable, code, /tmp/discord.deb]
+        state: present
+        update_cache: true
+      become: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Add Google Chrome repo (Fedora/RedHat)
+      ansible.builtin.yum_repository:
+        name: google-chrome
+        description: Google Chrome
+        baseurl: https://dl.google.com/linux/chrome/rpm/stable/x86_64
+        gpgkey: https://dl.google.com/linux/linux_signing_key.pub
+        gpgcheck: true
+        enabled: true
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Add VS Code repo (Fedora/RedHat)
+      ansible.builtin.yum_repository:
+        name: vscode
+        description: Visual Studio Code
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        gpgcheck: true
+        enabled: true
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Download Discord (Fedora/RedHat)
+      ansible.builtin.get_url:
+        url: "https://discord.com/api/download?platform=linux&format=rpm"
+        dest: /tmp/discord.rpm
+        mode: '0644'
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install Chrome and VS Code (Fedora/RedHat)
+      ansible.builtin.dnf:
+        name: [google-chrome-stable, code]
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install Discord (Fedora/RedHat)
+      ansible.builtin.dnf:
+        name: /tmp/discord.rpm
+        state: present
+        disable_gpg_check: true
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install base-devel and git for yay (Arch)
+      community.general.pacman:
+        name: [base-devel, git]
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Check if yay is installed (Arch)
+      command: which yay
+      register: _yay_check
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Install yay from AUR (Arch)
+      shell: |
+        git clone https://aur.archlinux.org/yay.git /tmp/yay
+        cd /tmp/yay
+        makepkg -si --noconfirm
+        rm -rf /tmp/yay
+      when:
+        - ansible_facts['os_family'] == "Archlinux"
+        - _yay_check.rc != 0
+      changed_when: true
+
+    - name: Install Chrome, VS Code, and Discord via yay (Arch)
+      shell: yay -S --noconfirm --needed google-chrome visual-studio-code-bin discord
+      when: ansible_facts['os_family'] == "Archlinux"
+      changed_when: false

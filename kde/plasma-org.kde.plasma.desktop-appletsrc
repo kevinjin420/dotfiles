@@ -12,7 +12,7 @@ ItemGeometries-2560x1600=
 ItemGeometries-2752x1152=
 ItemGeometries-3440x1440=
 ItemGeometriesHorizontal=
-activityId=7175435c-1eb1-4dfa-b162-6b2a1a23cc20
+activityId=__ACTIVITY__
 formfactor=0
 immutability=1
 lastScreen=0
@@ -160,7 +160,7 @@ AppletOrder=50;54;34;6;7;20
 ItemGeometries-2560x1600=
 ItemGeometries-3440x1440=
 ItemGeometriesHorizontal=
-activityId=7175435c-1eb1-4dfa-b162-6b2a1a23cc20
+activityId=__ACTIVITY__
 formfactor=0
 immutability=1
 lastScreen=1
@@ -179,7 +179,7 @@ SlidePaths=/usr/share/plasma/wallpapers,/usr/share/wallpapers
 [Containments][35]
 ItemGeometries-2560x1600=
 ItemGeometriesHorizontal=
-activityId=7175435c-1eb1-4dfa-b162-6b2a1a23cc20
+activityId=__ACTIVITY__
 formfactor=0
 immutability=1
 lastScreen=2
@@ -191,7 +191,7 @@ wallpaperplugin=org.kde.image
 Image=file:///usr/share/wallpapers/Next/contents/images/3840x2160.jpg
 
 [Containments][36]
-activityId=7175435c-1eb1-4dfa-b162-6b2a1a23cc20
+activityId=__ACTIVITY__
 formfactor=0
 immutability=1
 lastScreen=3
@@ -203,7 +203,7 @@ wallpaperplugin=org.kde.image
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
 
 [Containments][38]
-activityId=7175435c-1eb1-4dfa-b162-6b2a1a23cc20
+activityId=__ACTIVITY__
 formfactor=0
 immutability=1
 lastScreen=4
