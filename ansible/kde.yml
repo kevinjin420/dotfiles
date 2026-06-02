@@ -61,6 +61,35 @@
         content: "{{ lookup('file', dotfiles_dir + '/kde/plasma-org.kde.plasma.desktop-appletsrc') | replace('/home/kevinjin/', user_home + '/') }}"
         dest: "{{ user_home }}/.config/plasma-org.kde.plasma.desktop-appletsrc"
 
+    - name: Get distributor logo icon name from os-release
+      shell: |
+        . /etc/os-release
+        echo "${LOGO:-distributor-logo}"
+      register: _logo_icon_name
+      changed_when: false
+
+    - name: Resolve distributor logo file path
+      shell: |
+        icon="{{ _logo_icon_name.stdout | trim }}"
+        for size in scalable 256x256 128x128 96x96 48x48; do
+          for ext in svg png; do
+            f="/usr/share/icons/hicolor/${size}/apps/${icon}.${ext}"
+            [ -f "$f" ] && echo "$f" && exit 0
+          done
+        done
+        find /usr/share/pixmaps -name "${icon}.*" 2>/dev/null | head -1
+      register: _logo_path
+      changed_when: false
+
+    - name: Set Kicker custom button image to distro logo
+      shell: >
+        kwriteconfig6
+        --file plasma-org.kde.plasma.desktop-appletsrc
+        --group Containments --group 2 --group Applets --group 50 --group Configuration --group General
+        --key customButtonImage "{{ _logo_path.stdout | trim }}"
+      when: _logo_path.stdout | trim != ""
+      changed_when: false
+
     - name: Apply kwin settings
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
@@ -93,12 +122,20 @@
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
       loop:
+        - "--file klassy/klassyrc --group ButtonColors --key ButtonBackgroundOpacityActive 100"
+        - "--file klassy/klassyrc --group ButtonColors --key ButtonBackgroundOpacityInactive 100"
+        - "--file klassy/klassyrc --group ButtonColors --key CloseButtonIconColorActive AsSelected"
+        - "--file klassy/klassyrc --group ButtonColors --key CloseButtonIconColorInactive AsSelected"
         - "--file klassy/klassyrc --group Global --key LookAndFeelSet org.kde.breezedark.desktop"
         - "--file klassy/klassyrc --group ShadowStyle --key ShadowStrength 128"
         - "--file klassy/klassyrc --group Windeco --key AnimationsEnabled false"
+        - "--file klassy/klassyrc --group Windeco --key BoldTitle false"
+        - "--file klassy/klassyrc --group Windeco --key ButtonIconStyle StyleTraditional"
         - "--file klassy/klassyrc --group Windeco --key ButtonShape ShapeFullHeightRectangle"
         - "--file klassy/klassyrc --group Windeco --key ColorizeThinWindowOutlineWithButton false"
+        - "--file klassy/klassyrc --group Windeco --key ColorizeWindowOutlineWithButton false"
         - "--file klassy/klassyrc --group Windeco --key CornerRadius 0"
+        - "--file klassy/klassyrc --group Windeco --key DrawTitleBarSeparator false"
         - "--file klassy/klassyrc --group Windeco --key UseTitleBarColorForAllBorders false"
         - "--file klassy/klassyrc --group Windeco --key WindowCornerRadius 0"
         - "--file klassy/klassyrc --group WindowOutlineStyle --key ThinWindowOutlineStyleActive WindowOutlineNone"
@@ -145,7 +182,7 @@
       changed_when: false
       loop:
         - "--file kscreenlockerrc --group Daemon --key Timeout 30"
-        - '--file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "{{ user_home }}/Documents/wallpapers/firewatch.png"'
+        - '--file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "{{ dotfiles_dir }}/wallpapers/firewatch.png"'
 
     - name: Apply breeze settings
       shell: "kwriteconfig6 {{ item }}"
@@ -182,6 +219,13 @@
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
         - '--file kglobalshortcutsrc --group services --group kitty.desktop --key _launch "Alt+Return"'
+
+    - name: Set desktop wallpaper
+      shell: plasma-apply-wallpaperimage "{{ dotfiles_dir }}/wallpapers/bryce_canyon_valley.JPG"
+      changed_when: false
+      environment:
+        DISPLAY: ":0"
+        DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
 
     - name: Done
       debug:

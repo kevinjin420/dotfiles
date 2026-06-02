@@ -41,7 +41,7 @@ ToolBoxButtonState=topcenter
 ToolBoxButtonX=879
 
 [Containments][1][Wallpaper][org.kde.image][General]
-Image=/home/kevinjin/Documents/wallpapers/bryce_canyon_valley.JPG
+Image=/home/kevinjin/dotfiles/wallpapers/bryce_canyon_valley.JPG
 SlidePaths=/usr/share/plasma/wallpapers,/usr/share/wallpapers
 
 [Containments][2]
@@ -173,7 +173,7 @@ DialogHeight=600
 DialogWidth=800
 
 [Containments][25][Wallpaper][org.kde.image][General]
-Image=/home/kevinjin/Documents/wallpapers/bryce_canyon_valley.JPG
+Image=/home/kevinjin/dotfiles/wallpapers/bryce_canyon_valley.JPG
 SlidePaths=/usr/share/plasma/wallpapers,/usr/share/wallpapers
 
 [Containments][35]
