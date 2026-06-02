@@ -187,17 +187,12 @@
         dest: "{{ user_home }}/.config/xdg-terminals.list"
       when: ansible_facts['os_family'] != "Darwin"
 
-    - name: Check if nvim config exists
-      stat:
-        path: "{{ user_home }}/.config/nvim"
-      register: nvim_dir
-
-    - name: Setup LazyVim
-      git:
-        repo: https://github.com/LazyVim/starter
+    - name: Setup nvim config symlink
+      file:
+        src: "{{ dotfiles_dir }}/config/nvim"
         dest: "{{ user_home }}/.config/nvim"
-        update: false
-      when: not nvim_dir.stat.exists
+        state: link
+        force: yes
 
     - name: Install fonts (Linux)
       copy:

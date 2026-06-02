@@ -152,6 +152,14 @@
         - { src: "local/share/fcitx5/rime/default.custom.yaml", dest: ".local/share/fcitx5/rime/default.custom.yaml" }
       when: ansible_facts['os_family'] != "Darwin"
 
+    - name: Restore Rime user dictionary
+      copy:
+        src: "{{ dotfiles_dir }}/local/share/fcitx5/rime/luna_pinyin.userdb/"
+        dest: "{{ user_home }}/.local/share/fcitx5/rime/luna_pinyin.userdb/"
+        mode: "0644"
+        force: false
+      when: ansible_facts['os_family'] != "Darwin"
+
     # XMODIFIERS only — GTK_IM_MODULE/QT_IM_MODULE omitted so Wayland-native apps use the Wayland IM protocol directly
     - name: Set fcitx5 IM environment variables for sandboxed/XWayland apps
       copy:
