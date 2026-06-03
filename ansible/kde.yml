@@ -248,6 +248,21 @@
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
 
+    - name: Disable panel task manager shortcuts
+      shell: "kwriteconfig6 {{ item }}"
+      changed_when: false
+      loop:
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 1" "none,Meta+1,Activate Task Manager Entry 1"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 2" "none,Meta+2,Activate Task Manager Entry 2"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 3" "none,Meta+3,Activate Task Manager Entry 3"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 4" "none,Meta+4,Activate Task Manager Entry 4"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 5" "none,Meta+5,Activate Task Manager Entry 5"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 6" "none,Meta+6,Activate Task Manager Entry 6"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 7" "none,Meta+7,Activate Task Manager Entry 7"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 8" "none,Meta+8,Activate Task Manager Entry 8"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 9" "none,Meta+9,Activate Task Manager Entry 9"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 10" "none,Meta+0,Activate Task Manager Entry 10"'
+
     - name: Set account avatar
       copy:
         src: "{{ dotfiles_dir }}/wallpapers/vertigo.jpg"
