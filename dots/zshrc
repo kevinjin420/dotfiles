@@ -59,7 +59,6 @@ fi
 
 # MRover aliases (ROS_DOMAIN_ID, bun PATH, source_mrover_overlay are in ~/.zshenv)
 if [ -d ~/ros2_ws/src/mrover ]; then
-    alias mrover="cd ~/ros2_ws/src/mrover && source_mrover_overlay"
     alias base="ros2 launch mrover basestation.launch.py mode:=dev"
     alias sim="ros2 launch mrover simulator.launch.py"
 fi
@@ -74,3 +73,6 @@ if [[ -d /opt/st/stm32cubeclt_1.21.0 ]]; then
 fi
 
 export PATH="/home/kevinjin/.pixi/bin:$PATH"
+
+# MRover portable dev environment
+source "/home/kevinjin/mrover-ros2/tools/mrover.zshenv"
