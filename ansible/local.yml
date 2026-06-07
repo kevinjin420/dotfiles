@@ -211,6 +211,17 @@
       failed_when: false
       when: ansible_facts['os_family'] != "Darwin"
 
+    - name: Stat nvim config path
+      stat:
+        path: "{{ user_home }}/.config/nvim"
+      register: nvim_config_stat
+
+    - name: Remove nvim config directory if not a symlink
+      file:
+        path: "{{ user_home }}/.config/nvim"
+        state: absent
+      when: nvim_config_stat.stat.exists and not nvim_config_stat.stat.islnk
+
     - name: Setup nvim config symlink
       file:
         src: "{{ dotfiles_dir }}/config/nvim"
