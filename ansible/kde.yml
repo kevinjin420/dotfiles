@@ -252,16 +252,38 @@
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
       loop:
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 1" "none,Meta+1,Activate Task Manager Entry 1"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 2" "none,Meta+2,Activate Task Manager Entry 2"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 3" "none,Meta+3,Activate Task Manager Entry 3"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 4" "none,Meta+4,Activate Task Manager Entry 4"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 5" "none,Meta+5,Activate Task Manager Entry 5"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 6" "none,Meta+6,Activate Task Manager Entry 6"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 7" "none,Meta+7,Activate Task Manager Entry 7"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 8" "none,Meta+8,Activate Task Manager Entry 8"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 9" "none,Meta+9,Activate Task Manager Entry 9"'
-        - '--file kglobalshortcutsrc --group plasmashell --key "Activate Task Manager Entry 10" "none,Meta+0,Activate Task Manager Entry 10"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 1" "none,none,Activate Task Manager Entry 1"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 2" "none,none,Activate Task Manager Entry 2"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 3" "none,none,Activate Task Manager Entry 3"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 4" "none,none,Activate Task Manager Entry 4"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 5" "none,none,Activate Task Manager Entry 5"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 6" "none,none,Activate Task Manager Entry 6"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 7" "none,none,Activate Task Manager Entry 7"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 8" "none,none,Activate Task Manager Entry 8"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 9" "none,none,Activate Task Manager Entry 9"'
+        - '--file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 10" "none,none,Activate Task Manager Entry 10"'
+
+    - name: Remove stale Title Case task manager shortcut keys
+      shell: 'kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "{{ item }}" --delete'
+      changed_when: false
+      loop:
+        - Activate Task Manager Entry 1
+        - Activate Task Manager Entry 2
+        - Activate Task Manager Entry 3
+        - Activate Task Manager Entry 4
+        - Activate Task Manager Entry 5
+        - Activate Task Manager Entry 6
+        - Activate Task Manager Entry 7
+        - Activate Task Manager Entry 8
+        - Activate Task Manager Entry 9
+        - Activate Task Manager Entry 10
+
+    - name: Restart kglobalaccel to load shortcut changes into memory
+      shell: |
+        kquitapp6 kglobalaccel || pkill -x kglobalaccel5 || true
+        sleep 1
+        kglobalaccel6 &
+      changed_when: false
 
     - name: Set account avatar
       copy:
