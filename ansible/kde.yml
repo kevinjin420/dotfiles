@@ -84,6 +84,10 @@
             [ -f "$f" ] && echo "$f" && exit 0
           done
         done
+        for ext in svg png; do
+          f="/usr/share/icons/${icon}.${ext}"
+          [ -f "$f" ] && echo "$f" && exit 0
+        done
         find /usr/share/pixmaps -name "${icon}.*" 2>/dev/null | head -1
       register: _logo_path
       changed_when: false
