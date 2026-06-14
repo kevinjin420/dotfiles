@@ -247,6 +247,9 @@
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Alt+*,,Window to Desktop 8"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Alt+(,,Window to Desktop 9"'
         - '--file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Alt+),,Window to Desktop 10"'
+        - '--file kglobalshortcutsrc --group kwin --key "view_zoom_in" "none,Meta++\tMeta+=,Zoom In"'
+        - '--file kglobalshortcutsrc --group kwin --key "view_zoom_out" "none,Meta+-,Zoom Out"'
+        - '--file kglobalshortcutsrc --group kwin --key "view_actual_size" "none,Meta+0,Zoom to Actual Size"'
 
     - name: Disable panel task manager shortcuts
       shell: "kwriteconfig6 {{ item }}"
@@ -281,9 +284,45 @@
     - name: Restart kglobalaccel to load shortcut changes into memory
       shell: |
         kquitapp6 kglobalaccel || pkill -x kglobalaccel5 || true
-        sleep 1
+        sleep 2
         kglobalaccel6 &
+        sleep 2
       changed_when: false
+
+    - name: Clear task manager shortcuts at runtime via DBus
+      shell: |
+        gdbus call --session \
+          --dest org.kde.kglobalaccel \
+          --object-path /kglobalaccel \
+          --method org.kde.KGlobalAccel.setForeignShortcut \
+          '["plasmashell", "plasmashell", "{{ item.unique }}", "{{ item.friendly }}"]' \
+          '@ai []'
+      changed_when: false
+      loop:
+        - { unique: "activate task manager entry 1",  friendly: "Activate Task Manager Entry 1" }
+        - { unique: "activate task manager entry 2",  friendly: "Activate Task Manager Entry 2" }
+        - { unique: "activate task manager entry 3",  friendly: "Activate Task Manager Entry 3" }
+        - { unique: "activate task manager entry 4",  friendly: "Activate Task Manager Entry 4" }
+        - { unique: "activate task manager entry 5",  friendly: "Activate Task Manager Entry 5" }
+        - { unique: "activate task manager entry 6",  friendly: "Activate Task Manager Entry 6" }
+        - { unique: "activate task manager entry 7",  friendly: "Activate Task Manager Entry 7" }
+        - { unique: "activate task manager entry 8",  friendly: "Activate Task Manager Entry 8" }
+        - { unique: "activate task manager entry 9",  friendly: "Activate Task Manager Entry 9" }
+        - { unique: "activate task manager entry 10", friendly: "Activate Task Manager Entry 10" }
+
+    - name: Clear zoom shortcuts at runtime via DBus
+      shell: |
+        gdbus call --session \
+          --dest org.kde.kglobalaccel \
+          --object-path /kglobalaccel \
+          --method org.kde.KGlobalAccel.setForeignShortcut \
+          '["kwin", "KWin", "{{ item.unique }}", "{{ item.friendly }}"]' \
+          '@ai []'
+      changed_when: false
+      loop:
+        - { unique: "view_zoom_in",    friendly: "Zoom In" }
+        - { unique: "view_zoom_out",   friendly: "Zoom Out" }
+        - { unique: "view_actual_size", friendly: "Zoom to Actual Size" }
 
     - name: Set account avatar
       copy:
