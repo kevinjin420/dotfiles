@@ -297,6 +297,10 @@
         DISPLAY: ":0"
         DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
 
-    - name: Done
-      debug:
-        msg: "Completed -- reboot NOW to apply all settings"
+    - name: Prompt for reboot
+      pause:
+        prompt: "Completed. Enter to reboot now, or Ctrl+C to skip. You need to reboot soon for changes to take effect. "
+
+    - name: Reboot
+      shell: systemctl reboot
+      become: true
