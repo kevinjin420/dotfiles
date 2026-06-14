@@ -1,0 +1,9 @@
+- name: Install Chrome, VS Code, and Discord
+  community.general.homebrew_cask:
+    name: [google-chrome, visual-studio-code, discord]
+    state: present
+
+- name: Install CLI tools
+  community.general.homebrew:
+    name: [sl, fastfetch, btop, gti, cowsay]
+    state: present

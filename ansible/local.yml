@@ -9,33 +9,8 @@
     kitty_bin_dir: "{{ kitty_app_dir }}/{{ 'Contents/MacOS' if ansible_facts['os_family'] == 'Darwin' else 'bin' }}"
 
   tasks:
-    - name: Install base packages (macOS)
-      community.general.homebrew:
-        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
-        state: present
-      when: ansible_facts['os_family'] == "Darwin"
-
-    - name: Install base packages (Debian/Ubuntu)
-      ansible.builtin.apt:
-        name: [zsh, fzf, git, curl, python3, cowsay, sl]
-        state: present
-        update_cache: true
-      become: true
-      when: ansible_facts['os_family'] == "Debian"
-
-    - name: Install base packages (Arch)
-      community.general.pacman:
-        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
-        state: present
-      become: true
-      when: ansible_facts['os_family'] == "Archlinux"
-
-    - name: Install base packages (Fedora/RedHat)
-      ansible.builtin.dnf:
-        name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
-        state: present
-      become: true
-      when: ansible_facts['os_family'] == "RedHat"
+    - name: Install base packages
+      include_tasks: "tasks/local/{{ ansible_facts['os_family'] }}.yml"
 
     - name: Resolve zsh binary path
       command: which zsh

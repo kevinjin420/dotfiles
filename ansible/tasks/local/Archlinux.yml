@@ -1,0 +1,5 @@
+- name: Install base packages
+  community.general.pacman:
+    name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
+    state: present
+  become: true

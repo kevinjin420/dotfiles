@@ -1,0 +1,4 @@
+- name: Install base packages
+  community.general.homebrew:
+    name: [zsh, fzf, git, curl, neovim, python3, cowsay, sl]
+    state: present
