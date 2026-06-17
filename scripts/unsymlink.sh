@@ -24,7 +24,6 @@ detach() {
   echo "detached: $path (was -> $target)"
 }
 
-detach "$HOME/.zshrc"
 detach "$HOME/.gitconfig"
 
 git config --global user.name "kevin.jin"
