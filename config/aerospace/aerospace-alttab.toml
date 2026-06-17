@@ -1,0 +1,69 @@
+start-at-login = true
+# alt-tab integration, hardcoded binary path
+# exec-on-workspace-change = ['/bin/bash', '-c', '/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-workspace-changed=$AEROSPACE_FOCUSED_WORKSPACE']
+
+# only left right split
+# default-root-container-layout = 'tiles'
+# default-root-container-orientation = 'horizontal'
+accordion-padding = 0
+
+[gaps]
+inner.horizontal = 0
+inner.vertical = 0
+outer.left = 0
+outer.bottom = 0
+outer.top = 0
+outer.right = 0
+
+[mode.main.binding]
+# Workspace switching
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
+
+# Move window to workspace
+alt-shift-1 = ['move-node-to-workspace 1', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-2 = ['move-node-to-workspace 2', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-3 = ['move-node-to-workspace 3', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-4 = ['move-node-to-workspace 4', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-5 = ['move-node-to-workspace 5', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-6 = ['move-node-to-workspace 6', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-7 = ['move-node-to-workspace 7', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-8 = ['move-node-to-workspace 8', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-9 = ['move-node-to-workspace 9', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+alt-shift-0 = ['move-node-to-workspace 10', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+
+
+alt-enter = 'exec-and-forget open -na kitty'
+alt-shift-semicolon = 'reload-config'
+
+ctrl-alt-left  = ['layout tiling', 'move left']
+ctrl-alt-right = ['layout tiling', 'move right']
+ctrl-alt-up    = 'layout tiling'
+ctrl-alt-down  = 'layout floating'
+
+# Auto-tile browser + editor (these split into left/right halves).
+# Each must also fire the AltTab notify, then stop (no fall-through to float).
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = ['layout tiling', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = ['layout tiling', 'exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
+
+# Default: everything else floats (kitty, Discord, Slack, Finder, ...)
+[[on-window-detected]]
+check-further-callbacks = true
+run = 'layout floating'
+
+[[on-window-detected]]
+check-further-callbacks = true
+run = ['exec-and-forget /bin/bash -c "/Applications/AltTab.app/Contents/MacOS/AltTab --aerospace-mapping-changed"']
