@@ -2,7 +2,7 @@
 # Replaces symlinked dotfiles with real copies so local edits don't affect the repo.
 set -euo pipefail
 
-decouple() {
+detach() {
   local path="$1"
 
   if [[ ! -L "$path" ]]; then
@@ -18,11 +18,15 @@ decouple() {
     return 1
   fi
 
-  cp "$target" "$path.decoupled"
+  cp "$target" "$path.detached"
   rm "$path"
-  mv "$path.decoupled" "$path"
-  echo "decoupled: $path (was -> $target)"
+  mv "$path.detached" "$path"
+  echo "detached: $path (was -> $target)"
 }
 
-decouple "$HOME/.zshrc"
-decouple "$HOME/.gitconfig"
+detach "$HOME/.zshrc"
+detach "$HOME/.gitconfig"
+
+git config --global user.name "kevin.jin"
+git config --global user.email "kevin.jin@bytedance.com"
+echo "git identity: kevin.jin <kevin.jin@bytedance.com>"
