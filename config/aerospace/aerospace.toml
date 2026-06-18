@@ -1,6 +1,9 @@
 start-at-login = true
 accordion-padding = 0
 
+[workspace-to-monitor-force-assignment]
+10 = 'secondary'
+
 [gaps]
 inner.horizontal = 0
 inner.vertical = 0
