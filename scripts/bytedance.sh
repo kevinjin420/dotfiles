@@ -29,8 +29,8 @@ git config --global user.name "kevin.jin"
 git config --global user.email "kevin.jin@bytedance.com"
 
 git config --global 'url.gitr.insteadOf' 'git://git.byted.org/'
-git config --global 'credential.https://code.byted.org.username' '${your_email_prefix}'
-git config --global 'url.ssh://${your_email_prefix}@git.byted.org:29418.insteadOf' 'https://git.byted.org'
+git config --global 'credential.https://code.byted.org.username' 'kevin.jin'
+git config --global 'url.ssh://kevin.jin@git.byted.org:29418.insteadOf' 'https://git.byted.org'
 git config --global 'url.git@code.byted.org:.insteadOf' 'https://code.byted.org/'
 
 echo "git identity: kevin.jin <kevin.jin@bytedance.com>"
