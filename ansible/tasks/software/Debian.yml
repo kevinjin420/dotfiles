@@ -28,7 +28,7 @@
 
 - name: Install Chrome, VS Code, and CLI tools
   ansible.builtin.apt:
-    name: [google-chrome-stable, code, sl, fastfetch, btop, gti, cowsay]
+    name: [google-chrome-stable, code, sl, fastfetch, btop, gti, cowsay, wl-clipboard]
     state: present
     update_cache: true
   become: true
