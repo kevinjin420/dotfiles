@@ -1,0 +1,25 @@
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+
+  tasks:
+    - name: Install kitty (Arch)
+      community.general.pacman:
+        name: kitty
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == 'Archlinux'
+
+    - name: Install kitty (Debian)
+      apt:
+        name: kitty
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install kitty (macOS)
+      community.general.homebrew_cask:
+        name: kitty
+        state: present
+      when: ansible_facts['os_family'] == 'Darwin'
