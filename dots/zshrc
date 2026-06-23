@@ -71,3 +71,9 @@ export PATH="/home/kevinjin/.pixi/bin:$PATH"
 # BEGIN MROVER
 [[ -f "${MROVER_REPO:-$HOME/mrover-ros2}/tools/mrover.zshenv" ]] && source "${MROVER_REPO:-$HOME/mrover-ros2}/tools/mrover.zshenv"
 # END MROVER
+
+if [[ -d "${MROVER_REPO:-$HOME/mrover-ros2}/" ]]; then
+    alias base="ros2 launch mrover basestation.launch.py mode:=dev"
+    alias sim="ros2 launch mrover simulator.launch.py"
+fi
+
