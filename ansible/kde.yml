@@ -121,6 +121,7 @@
         - "--file kwinrc --group Plugins --key slideEnabled false"
         - "--file kwinrc --group Script-desktopchangeosd --key TextOnly true"
         - "--file kwinrc --group Wayland --key EnablePrimarySelection false"
+        - "--file kwinrc --group Effect-showdesktop --key BorderActivate 9"
 
     - name: Apply kdeglobals settings
       shell: "kwriteconfig6 {{ item }}"
