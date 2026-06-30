@@ -168,6 +168,29 @@
         mode: "0644"
       when: ansible_facts['os_family'] != "Darwin"
 
+    - name: Check if WeChat is installed
+      stat:
+        path: /usr/share/applications/wechat.desktop
+      register: wechat_desktop
+
+    - name: Ensure ~/.local/share/applications exists
+      file:
+        path: "{{ user_home }}/.local/share/applications"
+        state: directory
+        mode: "0755"
+      when:
+        - ansible_facts['os_family'] in ["Debian", "RedHat"]
+        - wechat_desktop.stat.exists
+
+    - name: Symlink WeChat desktop override for fcitx5 XWayland IM
+      file:
+        src: "{{ dotfiles_dir }}/local/share/applications/wechat.desktop"
+        dest: "{{ user_home }}/.local/share/applications/wechat.desktop"
+        state: link
+      when:
+        - ansible_facts['os_family'] in ["Debian", "RedHat"]
+        - wechat_desktop.stat.exists
+
     - name: Set fcitx5 as KDE Wayland virtual keyboard
       command: kwriteconfig6 --file kwinrc --group Wayland --key InputMethod /usr/share/applications/fcitx5-wayland-launcher.desktop
       changed_when: false
