@@ -13,6 +13,8 @@ alias tsdown="sudo tailscale down"
 
 alias s="kitten ssh"
 
+command -v open >/dev/null || alias open="xdg-open"
+
 # Exports & PATH
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
