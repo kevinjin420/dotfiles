@@ -119,6 +119,7 @@
         - "--file kwinrc --group TabBox --key LayoutName compact"
         - "--file kwinrc --group Plugins --key shakecursorEnabled false"
         - "--file kwinrc --group Plugins --key slideEnabled false"
+        - "--file kwinrc --group Plugins --key zoomEnabled false"
         - "--file kwinrc --group Script-desktopchangeosd --key TextOnly true"
         - "--file kwinrc --group Wayland --key EnablePrimarySelection false"
         - "--file kwinrc --group Effect-showdesktop --key BorderActivate 9"
