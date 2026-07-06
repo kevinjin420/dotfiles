@@ -197,7 +197,9 @@
     - name: Set fcitx5 as KDE Wayland virtual keyboard
       command: kwriteconfig6 --file kwinrc --group Wayland --key InputMethod /usr/share/applications/fcitx5-wayland-launcher.desktop
       changed_when: false
-      when: ansible_facts['os_family'] != "Darwin"
+      when:
+        - ansible_facts['os_family'] != "Darwin"
+        - lookup('env', 'XDG_CURRENT_DESKTOP') == 'KDE'
 
     # for non-KDE/non-systemd X11 sessions
     - name: Write fcitx5 environment variables for X11 sessions
