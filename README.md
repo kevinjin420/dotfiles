@@ -5,6 +5,7 @@ This is my personal dotfiles repository, supporting:
 - Arch, 
 - Debian/Ubuntu
 - Fedora
+
 basically the operating systems I use
 
 ## Bootstrap
