@@ -1,27 +1,28 @@
 # dotfiles
 
-This is my personal dotfiles repository, complete with ansible scripts with support for:
+This is my personal dotfiles repository, supporting:
 - macOS
 - Arch, 
 - Debian/Ubuntu
 - Fedora
+basically the operating systems I use
 
 ## Bootstrap
 
-Fresh machine setup:
-- installs Ansible, git
-- clones this repo
-- runs base playbook automatically
+for a freshly installed OS:
+- install Ansible, git
+- clone this repo
+- run `./ansible.sh local.yml` to start
 
+OR, bootstrap script:
 ```sh
 curl -fsSL https://dotfiles.kevinjin.dev | bash
 ```
 
-To run a specific playbook manually:
+then, run playbooks as needed:
 
 ```sh
 ./ansible.sh <playbook.yml>
-# e.g. ./ansible.sh kde.yml
 ```
 
 ---
@@ -37,59 +38,35 @@ Main setup
   - curl
   - kitty
   - tmux
-- sets zsh as default shell
-- installs Oh-My-Zsh + plugins
+- zsh default shell
+- omz + plugins:
   - autosuggestions
   - syntax-highlighting
   - powerlevel10k
-- sets up LazyVim (skipped if `~/.config/nvim` already exists)
-- installs fonts
-- symlinks dotfiles
-- installs udev rules for embedded dev boards (Linux only)
+- lazyvim setup
+- font suite (JetBrains Mono NL NF)
+- symlink dotfiles
+- udev rules
 
 ### `headless.yml`
-Same as `local.yml` but without Kitty
+`local.yml` but no kitty, meant for raspis, etc.
 
-For servers or raspis. Tmux incl. 
 
 ### `kde.yml`
-KDE Plasma setup. Applies kwin settings, installs my own desktop-status-bar plasmoid, sets the AritimDark color scheme, and deploys plasma applet config
+KDE Plasma config
+- kwin settings
+- installs desktop-status-bar
 
-Requires `kwriteconfig6`, aka only plasma 6 wayland compatible
-
-### `macos-aerospace.yml` ← macOS flagship
-Full macOS window management setup:
-- **Aerospace** — tiling WM with named workspaces
-  - `alt-#` to switch workspace, `alt-shift-#` to move window
-  - `ctrl-alt-←/→` snap focused window to left/right half, `ctrl-alt-↑` tile (maximize if alone), `ctrl-alt-↓` untile back to floating
-  - Chrome + VSCode auto-tile; everything else (terminals, chat) floats with normal drag-drop
-- **AltTab fork** ([kevinjin420/alt-tab-macos](https://github.com/kevinjin420/alt-tab-macos)) — per-workspace alt-tab, downloaded from pre-built GitHub releases
-
-Snapping uses Aerospace's native tiling so positions survive workspace switches. No Rectangle (see `macos-aerospace-rectangle.yml`).
-
-### `macos-aerospace-rectangle.yml`
-Legacy variant of the flagship: same Aerospace + AltTab fork, but every window floats and snapping is done by **Rectangle** instead of native tiling (config: `config/aerospace/aerospace-rectangle.toml`). Kept for reference — Rectangle-snapped floating windows get re-centered when Aerospace hides/restores them across workspace switches, which is why the flagship moved to native tiling.
+because this uses kwriteconfig6, only plasma 6 is supoported (which is perfectly reasonable)
 
 ### `macos.yml`
-Minimal macOS extras: instant-space-switcher + Rectangle. No tiling WM.
-
-### `macos-iss.yml` — native Spaces
-Native macOS Spaces as virtual desktops, no tiling WM. Positions never drift (macOS owns the Spaces) and Rectangle snapping is conflict-free.
-- **instant-space-switcher** — removes the Space-switch animation
-- **Rectangle** — left/right half snapping
-- **Hammerspoon** — `ctrl-shift-#` moves the focused window to Desktop N via a SIP-free synthetic "grab + switch Space" gesture, replacing the move-to-space private API that broke on macOS 15+
-
-Manual per-machine setup (not automatable):
-- Keyboard → Shortcuts → Mission Control: set **Switch to Desktop 1–9** to **Option+1–9** (`alt-#`)
-- Mission Control: turn **off** "Automatically rearrange Spaces", and pre-create 9 desktops
-
-Caveats: desktops are positional (fullscreening an app inserts a Space and shifts the numbering); the move gesture flickers the cursor, follows the window to the destination, and only works on windows with a grabbable title bar.
+this is a mess, will clean up later (need to use this piece of shit DE for work)
 
 ### `rime.yml`
-Sets up fcitx5 + Rime Chinese input method. Installs Qt/GTK frontends for the detected distro.
+simplified chinese input method on kde
 
 ### `agent.yml`
-Symlinks `CLAUDE.md` to `~/.claude/CLAUDE.md` and `universal.md` to `~/.cursor/rules/universal.md` for AI coding assistant config.
+tries to make claude and cursor more usable
 
 ---
 
@@ -109,17 +86,3 @@ Tracked in `udev/rules.d/` and symlinked into `/etc/udev/rules.d/` by `local.yml
 | `99-jlink.rules` | SEGGER J-Link + CMSIS-DAP |
 | `99-SaleaeLogic.rules` | Saleae Logic analyzers |
 
----
-
-## What's symlinked
-
-| File | Target |
-|------|--------|
-| `dots/zshrc` | `~/.zshrc` |
-| `dots/p10k.zsh` | `~/.p10k.zsh` |
-| `dots/gitconfig` | `~/.gitconfig` |
-| `dots/always_forget.md` | `~/always-forget.md` |
-| `config/kitty/kitty.conf` | `~/.config/kitty/kitty.conf` |
-| `config/tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
-| `config/fastfetch/config.jsonc` | `~/.config/fastfetch/config.jsonc` |
-| `config/fastfetch/kuromi.txt` | `~/.config/fastfetch/kuromi.txt` |
