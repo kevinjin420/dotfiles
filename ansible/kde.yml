@@ -257,6 +257,10 @@
         - '--file kglobalshortcutsrc --group kwin --key "view_zoom_out" "none,Meta+-,Zoom Out"'
         - '--file kglobalshortcutsrc --group kwin --key "view_actual_size" "none,Meta+0,Zoom to Actual Size"'
 
+    - name: Disable performance mode switch shortcut
+      shell: 'kwriteconfig6 --file kglobalshortcutsrc --group org_kde_powerdevil --key powerProfile "none,none,Switch Power Profile"'
+      changed_when: false
+
     - name: Disable panel task manager shortcuts
       shell: "kwriteconfig6 {{ item }}"
       changed_when: false
