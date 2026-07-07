@@ -21,7 +21,7 @@
 	side-by-side = true
 	line-numbers = true
 	hunk-header-decoration-style = green box
-	pager = less --RAW-CONTROL-CHARS --no-init
+	pager = less -RS
 	file-style = cyan bold
 	file-decoration-style = cyan ol ul
 	line-numbers-left-style = green
