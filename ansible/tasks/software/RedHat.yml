@@ -18,9 +18,19 @@
     enabled: true
   become: true
 
+- name: Add GitHub CLI repo
+  ansible.builtin.yum_repository:
+    name: gh-cli
+    description: packages for the GitHub CLI
+    baseurl: https://cli.github.com/packages/rpm
+    gpgkey: https://cli.github.com/packages/githubcli-archive-keyring.asc
+    gpgcheck: true
+    enabled: true
+  become: true
+
 - name: Install Chrome, VS Code, and CLI tools
   ansible.builtin.dnf:
-    name: [google-chrome-stable, code, sl, fastfetch, btop, gti, cowsay, wl-clipboard]
+    name: [google-chrome-stable, code, gh, sl, fastfetch, btop, gti, cowsay, wl-clipboard]
     state: present
   become: true
 
