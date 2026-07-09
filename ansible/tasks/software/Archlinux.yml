@@ -20,5 +20,5 @@
   changed_when: true
 
 - name: Install Chrome, VS Code, Discord, and CLI tools via yay
-  shell: yay -S --noconfirm --needed google-chrome visual-studio-code-bin discord sl fastfetch btop gti cowsay wl-clipboard
+  shell: yay -S --noconfirm --needed google-chrome visual-studio-code-bin discord github-cli sl fastfetch btop gti cowsay wl-clipboard
   changed_when: false
