@@ -24,9 +24,9 @@
         state: directory
         mode: '0755'
 
-    - name: Symlink universal.md
+    - name: Symlink universal.mdc
       file:
-        src: "{{ dotfiles_dir }}/cursor/rules/universal.md"
-        dest: "{{ user_home }}/.cursor/rules/universal.md"
+        src: "{{ dotfiles_dir }}/cursor/rules/universal.mdc"
+        dest: "{{ user_home }}/.cursor/rules/universal.mdc"
         state: link
         force: yes
