@@ -1,4 +1,5 @@
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: [bootstrap.sh]
@@ -12,7 +13,7 @@ jobs:
     environment:
       name: github-pages
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: |
           mkdir out
           cp bootstrap.sh out/index.html
