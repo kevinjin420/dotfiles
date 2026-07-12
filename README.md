@@ -69,6 +69,11 @@ simplified chinese input method on kde
 ### `agent.yml`
 tries to make claude and cursor more usable
 
+### `envycontrol.yml`
+installs [envycontrol](https://github.com/bayasdev/envycontrol) for Nvidia Optimus GPU switching, Fedora only for now
+
+mode switching: `envycontrol -s <integrated|hybrid|nvidia>`
+
 ---
 
 ## udev rules

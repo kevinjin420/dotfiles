@@ -1,0 +1,28 @@
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+
+  pre_tasks:
+    - name: Fail if running as root
+      fail:
+        msg: "Do not run as root"
+      when: ansible_facts['user_id'] == "root"
+
+    - name: Fail if not Fedora
+      fail:
+        msg: "envycontrol is installed via a Fedora COPR repo -- unsupported distro"
+      when: ansible_facts['distribution'] != 'Fedora'
+
+  tasks:
+    - name: Enable envycontrol COPR repo
+      community.general.copr:
+        name: sunwire/envycontrol
+        state: enabled
+      become: true
+
+    - name: Install envycontrol
+      ansible.builtin.dnf:
+        name: python3-envycontrol
+        state: present
+      become: true
