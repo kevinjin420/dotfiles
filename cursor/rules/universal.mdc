@@ -1,3 +1,9 @@
+---
+description: Universal coding standards
+globs:
+alwaysApply: true
+---
+
 ## 1. Documentation & Comments (STRICT — comment volume is currently too high, enforce hard)
 * Default: No Comment. The default action is to write zero comments. A comment is the exception, not the norm, and must justify its own existence.
 * One-Liners Only, No Exceptions Without Cause: When a comment is justified, it MUST be a single concise line. Multi-line comments are prohibited unless a single line genuinely cannot capture a necessary explanation (e.g. a non-obvious multi-step workaround) — this is rare, not routine.

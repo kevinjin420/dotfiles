@@ -3,5 +3,5 @@ Type=Application
 Name=wechat
 Name[zh_CN]=微信
 Exec=env QT_IM_MODULE=fcitx /usr/bin/wechat %U
-Icon=/opt/wechat/icons/wechat.png
+Icon=wechat
 StartupWMClass=wechat
