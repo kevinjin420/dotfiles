@@ -71,6 +71,7 @@ tries to make claude and cursor more usable
 
 ### `envycontrol.yml`
 installs [envycontrol](https://github.com/bayasdev/envycontrol) for Nvidia Optimus GPU switching, Fedora only for now
+installs [optimus-gpu-switcher](https://github.com/enielrodriguez/optimus-gpu-switcher) plasma widget if KDE
 
 mode switching: `envycontrol -s <integrated|hybrid|nvidia>`
 

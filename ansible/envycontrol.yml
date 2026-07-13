@@ -26,3 +26,29 @@
         name: python3-envycontrol
         state: present
       become: true
+
+    - name: Check if KDE Plasma is installed
+      command: which kwriteconfig6
+      changed_when: false
+      failed_when: false
+      register: _kwriteconfig6
+
+    # github release ships plasma 5, cant use
+    - name: Create scratch dir for optimus-gpu-switcher source
+      file:
+        path: /tmp/optimus-gpu-switcher
+        state: directory
+      when: _kwriteconfig6.rc == 0
+
+    - name: Download optimus-gpu-switcher source
+      unarchive:
+        src: https://github.com/enielrodriguez/optimus-gpu-switcher/archive/refs/heads/main.tar.gz
+        dest: /tmp/optimus-gpu-switcher
+        remote_src: true
+        extra_opts: ["--strip-components=1"]
+      when: _kwriteconfig6.rc == 0
+
+    - name: Install optimus-gpu-switcher plasmoid
+      shell: kpackagetool6 --type Plasma/Applet --install /tmp/optimus-gpu-switcher 2>/dev/null || kpackagetool6 --type Plasma/Applet --upgrade /tmp/optimus-gpu-switcher
+      changed_when: false
+      when: _kwriteconfig6.rc == 0
