@@ -1,0 +1,50 @@
+- hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+
+  pre_tasks:
+    - name: Fail if running as root
+      fail:
+        msg: "Do not run as root"
+      when: ansible_facts['user_id'] == "root"
+
+    # guard TLP
+    - name: Check if TLP is active
+      command: systemctl is-active tlp
+      register: _tlp_check
+      changed_when: false
+      failed_when: false
+
+    - name: Fail if TLP conflicts with auto-cpufreq
+      fail:
+        msg: "TLP is active and conflicts with auto-cpufreq. Review its config (e.g. battery charge thresholds) then disable it: sudo systemctl disable --now tlp"
+      when: _tlp_check.stdout == "active"
+
+  tasks:
+    - name: Check if auto-cpufreq is installed
+      command: which auto-cpufreq
+      register: _auto_cpufreq_check
+      changed_when: false
+      failed_when: false
+
+    - name: Install auto-cpufreq
+      shell: |
+        git clone https://github.com/AdnanHodzic/auto-cpufreq.git /tmp/auto-cpufreq
+        cd /tmp/auto-cpufreq
+        ./auto-cpufreq-installer --install
+        cd /
+        rm -rf /tmp/auto-cpufreq
+      become: true
+      when: _auto_cpufreq_check.rc != 0
+
+    - name: Check if auto-cpufreq daemon is enabled
+      command: systemctl is-enabled auto-cpufreq
+      register: _auto_cpufreq_daemon_check
+      changed_when: false
+      failed_when: false
+
+    - name: Install and enable auto-cpufreq daemon
+      command: auto-cpufreq --install
+      become: true
+      when: _auto_cpufreq_daemon_check.rc != 0
