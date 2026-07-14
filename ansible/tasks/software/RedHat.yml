@@ -30,7 +30,7 @@
 
 - name: Install Chrome, VS Code, and CLI tools
   ansible.builtin.dnf:
-    name: [google-chrome-stable, code, gh, sl, fastfetch, btop, gti, cowsay, wl-clipboard]
+    name: [google-chrome-stable, code, gh, sl, fastfetch, btop, gti, cowsay, wl-clipboard, awscli2]
     state: present
   become: true
 
