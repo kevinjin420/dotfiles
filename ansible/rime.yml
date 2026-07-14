@@ -176,6 +176,13 @@
       changed_when: false
       failed_when: false
 
+    - name: Read installed WeChat icon path
+      shell: "grep -m1 '^Icon=' '{{ wechat_desktop.stdout }}' | cut -d= -f2-"
+      register: wechat_icon
+      changed_when: false
+      failed_when: false
+      when: wechat_desktop.stdout != ""
+
     - name: Ensure ~/.local/share/applications exists
       file:
         path: "{{ user_home }}/.local/share/applications"
@@ -185,11 +192,11 @@
         - ansible_facts['os_family'] != "Darwin"
         - wechat_desktop.stdout != ""
 
-    - name: Symlink WeChat desktop override for fcitx5 XWayland IM
-      file:
-        src: "{{ dotfiles_dir }}/local/share/applications/wechat.desktop"
+    - name: Deploy WeChat desktop override for fcitx5 XWayland IM
+      template:
+        src: "{{ dotfiles_dir }}/local/share/applications/wechat.desktop.j2"
         dest: "{{ user_home }}/.local/share/applications/wechat.desktop"
-        state: link
+        mode: "0644"
       when:
         - ansible_facts['os_family'] != "Darwin"
         - wechat_desktop.stdout != ""
