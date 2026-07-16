@@ -30,20 +30,37 @@
       failed_when: _klassy_check.rc != 0
 
   tasks:
-    - name: Get latest desktop-status-bar release info
+    - name: Get latest plasma-i3-pager release info
       uri:
-        url: https://api.github.com/repos/kevinjin420/desktop-status/releases/latest
+        url: https://api.github.com/repos/kevinjin420/plasma-i3-pager/releases/latest
         return_content: true
-      register: _desktop_status_release
+      register: _i3pager_release
 
-    - name: Download desktop-status-bar plasmoid
+    - name: Download plasma-i3-pager plasmoid
       get_url:
-        url: "{{ (_desktop_status_release.json.assets | selectattr('name', 'equalto', 'desktop-status-bar.plasmoid') | first).browser_download_url }}"
-        dest: /tmp/desktop-status-bar.plasmoid
+        url: "{{ (_i3pager_release.json.assets | selectattr('name', 'equalto', 'plasma-i3-pager.plasmoid') | first).browser_download_url }}"
+        dest: /tmp/plasma-i3-pager.plasmoid
         force: true
 
-    - name: Install desktop-status-bar plasmoid
-      shell: kpackagetool6 --type Plasma/Applet --install /tmp/desktop-status-bar.plasmoid 2>/dev/null || kpackagetool6 --type Plasma/Applet --upgrade /tmp/desktop-status-bar.plasmoid
+    - name: Install plasma-i3-pager plasmoid
+      shell: kpackagetool6 --type Plasma/Applet --install /tmp/plasma-i3-pager.plasmoid 2>/dev/null || kpackagetool6 --type Plasma/Applet --upgrade /tmp/plasma-i3-pager.plasmoid
+      changed_when: false
+
+    # toggles upower's ChargeThresholdEnabled; no such toggle exists in stock KDE UI
+    - name: Get latest plasma-charge-limiter release info
+      uri:
+        url: https://api.github.com/repos/kevinjin420/plasma-charge-limiter/releases/latest
+        return_content: true
+      register: _chargelimit_release
+
+    - name: Download plasma-charge-limiter plasmoid
+      get_url:
+        url: "{{ (_chargelimit_release.json.assets | selectattr('name', 'equalto', 'plasma-charge-limiter.plasmoid') | first).browser_download_url }}"
+        dest: /tmp/plasma-charge-limiter.plasmoid
+        force: true
+
+    - name: Install plasma-charge-limiter plasmoid
+      shell: kpackagetool6 --type Plasma/Applet --install /tmp/plasma-charge-limiter.plasmoid 2>/dev/null || kpackagetool6 --type Plasma/Applet --upgrade /tmp/plasma-charge-limiter.plasmoid
       changed_when: false
 
     - name: Create color-schemes directory
