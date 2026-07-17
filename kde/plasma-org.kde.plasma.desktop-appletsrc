@@ -138,14 +138,6 @@ plugin=org.kde.plasma.marginsseparator
 [Containments][2][Applets][6][Configuration]
 PreloadWeight=42
 
-[Containments][2][Applets][60]
-immutability=1
-plugin=org.kevinjin.plasma.chargelimit
-
-[Containments][2][Applets][60][Configuration][ConfigDialog]
-DialogHeight=630
-DialogWidth=810
-
 [Containments][2][Applets][7]
 immutability=1
 plugin=org.kde.plasma.systemtray
@@ -162,7 +154,7 @@ DialogWidth=3440
 PreloadWeight=42
 
 [Containments][2][General]
-AppletOrder=50;54;34;6;7;60;20
+AppletOrder=50;54;34;6;7;20
 
 [Containments][25]
 ItemGeometries-2560x1600=
@@ -368,6 +360,14 @@ plugin=org.kde.plasma.printmanager
 [Containments][8][Applets][9][Configuration]
 PreloadWeight=42
 
+[Containments][8][Applets][61]
+immutability=1
+plugin=org.kevinjin.plasma.chargelimit
+
+[Containments][8][Applets][61][Configuration][ConfigDialog]
+DialogHeight=630
+DialogWidth=810
+
 [Containments][8][ConfigDialog]
 DialogHeight=540
 DialogWidth=720
@@ -376,9 +376,9 @@ DialogWidth=720
 PreloadWeight=42
 
 [Containments][8][General]
-extraItems=org.kde.plasma.printmanager,org.kde.plasma.battery,org.kde.plasma.vault,org.kde.plasma.devicenotifier,org.kde.plasma.notifications,org.kde.plasma.clipboard,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.plasma.keyboardlayout,org.kde.plasma.networkmanagement,org.kde.plasma.manage-inputmethod,org.kde.kscreen,org.kde.plasma.brightness,org.kde.plasma.cameraindicator
+extraItems=org.kde.plasma.printmanager,org.kde.plasma.battery,org.kde.plasma.vault,org.kde.plasma.devicenotifier,org.kde.plasma.notifications,org.kde.plasma.clipboard,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.plasma.keyboardlayout,org.kde.plasma.networkmanagement,org.kde.plasma.manage-inputmethod,org.kde.kscreen,org.kde.plasma.brightness,org.kde.plasma.cameraindicator,org.kevinjin.plasma.chargelimit
 knownItems=org.kde.plasma.printmanager,org.kde.plasma.battery,org.kde.plasma.vault,org.kde.kdeconnect,org.kde.plasma.devicenotifier,org.kde.plasma.notifications,org.kde.plasma.clipboard,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kde.plasma.mediacontroller,org.kde.plasma.keyboardlayout,org.kde.plasma.networkmanagement,org.kde.plasma.manage-inputmethod,org.kde.kscreen,org.kde.plasma.brightness,org.kde.plasma.cameraindicator
-shownItems=org.kde.plasma.battery,org.kde.plasma.bluetooth,org.kde.plasma.volume
+shownItems=org.kde.plasma.battery,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kevinjin.plasma.chargelimit
 
 [ScreenMapping]
 itemsOnDisabledScreens=
