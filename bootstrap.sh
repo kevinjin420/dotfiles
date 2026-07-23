@@ -6,7 +6,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-DOTFILES_REPO="https://github.com/kevinjin420/dotfiles"
+DOTFILES_REPO="https://github.com/kevinjin0420/dotfiles"
 DOTFILES_DIR="${HOME}/dotfiles"
 
 echo -e "${BLUE}Bootstrapping${NC}"
